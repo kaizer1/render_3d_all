@@ -29,6 +29,7 @@ class PreLoad {
        const void CallingLoadingExtension() const noexcept;
        const void PreRender() const;
        const bool LoadingOpenGLPrograms(int w, int h, HDC cinte);
+       const void setHWND(HWND* hwnds);
 
 
 
@@ -38,5 +39,6 @@ class PreLoad {
    bool loadingAllElements = false;
   const void MainRender() const noexcept;
   HDC mainContext;
+  HWND *hwndLos = nullptr;
 
   };  

@@ -27,5 +27,5 @@ find_package(OpenGL REQUIRED)
 include_directories( ${OPENGL_INCLUDE_DIRS} include/ )
 
 
-add_executable(${NAME} EmptyWin.cpp PreLoad.cpp glad.c)
+add_executable(${NAME} EmptyWin.cpp PreLoad.cpp )
 target_link_libraries (${NAME}  ${OPENGL_LIBRARIES} ${WINLIBS})

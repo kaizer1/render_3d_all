@@ -138,16 +138,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {         
 
 
-    HDC hdc;                       // handle to device context 
-    RECT rcClient;                 // client area rectangle 
-    POINT ptClientUL;              // client upper left corner 
-    POINT ptClientLR;              // client lower right corner 
-    static POINTS ptsBegin;        // beginning point 
-    static POINTS ptsEnd;          // new endpoint 
-    static POINTS ptsPrevEnd;      // previous endpoint 
-    static BOOL fPrevLine = FALSE; // previous line flag 
-
-
     if (losLoad != NULL)                                                                        
     {         
 
@@ -271,92 +261,30 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
   case WM_LBUTTONDOWN: 
           {
-            // Capture mouse input. 
+            
  
             SetCapture(hWnd); 
  
-            // Retrieve the screen coordinates of the client area, 
-            // and convert them into client coordinates. 
- 
-            GetClientRect(hWnd, &rcClient); 
-            ptClientUL.x = rcClient.left; 
-            ptClientUL.y = rcClient.top; 
-            std::cout << " my points == " << ptClientUL.x << " s " << ptClientUL.y << "\n";
- 
-            // Add one to the right and bottom sides, because the 
-            // coordinates retrieved by GetClientRect do not 
-            // include the far left and lowermost pixels. 
- 
-            ptClientLR.x = rcClient.right + 1; 
-            ptClientLR.y = rcClient.bottom + 1; 
-            ClientToScreen(hWnd, &ptClientUL); 
-            ClientToScreen(hWnd, &ptClientLR); 
- 
-            // Copy the client coordinates of the client area 
-            // to the rcClient structure. Confine the mouse cursor 
-            // to the client area by passing the rcClient structure 
-            // to the ClipCursor function. 
- 
-            SetRect(&rcClient, ptClientUL.x, ptClientUL.y, 
-                ptClientLR.x, ptClientLR.y); 
-            ClipCursor(&rcClient); 
- 
-            // Convert the cursor coordinates into a POINTS 
-            // structure, which defines the beginning point of the 
-            // line drawn during a WM_MOUSEMOVE message. 
- 
-            ptsBegin = MAKEPOINTS(lParam); 
+          POINT pLos;
+        ::GetCursorPos(&pLos);
+
+         std::cout << " my mouse point x y " << pLos.x << " & " << pLos.y << "\n";
+
         }
             return 0; 
  
         case WM_MOUSEMOVE: 
       { 
-            // When moving the mouse, the user must hold down 
-            // the left mouse button to draw lines. 
+         
  
-            if (wParam & MK_LBUTTON) 
-            { 
- 
-                // Retrieve a device context (DC) for the client area. 
- 
-                hdc = GetDC(hWnd); 
- 
-                // The following function ensures that pixels of 
-                // the previously drawn line are set to white and 
-                // those of the new line are set to black. 
- 
-                SetROP2(hdc, R2_NOTXORPEN); 
- 
-                // If a line was drawn during an earlier WM_MOUSEMOVE 
-                // message, draw over it. This erases the line by 
-                // setting the color of its pixels to white. 
- 
-                if (fPrevLine) 
-                { 
-                    MoveToEx(hdc, ptsBegin.x, ptsBegin.y, 
-                        (LPPOINT) NULL); 
-                    LineTo(hdc, ptsPrevEnd.x, ptsPrevEnd.y); 
-                } 
- 
-                // Convert the current cursor coordinates to a 
-                // POINTS structure, and then draw a new line. 
- 
-                ptsEnd = MAKEPOINTS(lParam); 
-                MoveToEx(hdc, ptsBegin.x, ptsBegin.y, (LPPOINT) NULL); 
-                LineTo(hdc, ptsEnd.x, ptsEnd.y); 
- 
- 
-                fPrevLine = TRUE; 
-                ptsPrevEnd = ptsEnd; 
-                ReleaseDC(hWnd, hdc); 
-            } 
+          
         }
             break; 
  
         case WM_LBUTTONUP: 
  
-            fPrevLine = FALSE; 
-            ClipCursor(NULL); 
+          
+           
             ReleaseCapture(); 
             return 0; 
 
@@ -437,6 +365,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
     }
 
     ShowWindow(hwnd, nCmdShow);
+
+  losLoad->setHWND(&hwnd);
+
 
  HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_LOSVALIARNTALL));
    MSG msg = { };

@@ -68,6 +68,21 @@ PreLoad::PreLoad() {
 
 
 
+const void PreLoad::setHWND(HWND* hwnds){
+ 
+    hwndLos = hwnds;
+
+RECT rect;
+if(GetWindowRect(*hwndLos, &rect)){
+     int width = rect.right - rect.left;
+  int height = rect.bottom - rect.top;
+  std::cout << " my wid & hei " << width <<" " <<height << "\n";
+}
+
+
+}
+
+
   PreLoad::~PreLoad(){
 
 
