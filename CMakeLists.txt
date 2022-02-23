@@ -7,14 +7,16 @@ MESSAGE (WARNING " building start ")
 set(NAME render_3d)
 
 
-#set(CMAKE_CXX_COMPILER "C:/Program Files/LLVM/bin/clang++")
-#set(CMAKE_C_COMPILER "C:/Program Files/LLVM/bin/clang")
+set(CMAKE_CXX_COMPILER "C:/Program Files/LLVM/bin/clang++")
+set(CMAKE_C_COMPILER "C:/Program Files/LLVM/bin/clang")
 
-#set(CMAKE_C_COMPILER clang)
-#set(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_C_COMPILER clang)
+set(CMAKE_CXX_COMPILER clang++)
 
 set(CMAKE_CXX_STANDARD 20)
 
+# enable Vulkan, DirectX, OpenGL 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DOPENGL_VARIANT")
 
 project(${NAME})
 
@@ -22,8 +24,8 @@ project(${NAME})
 find_package(OpenGL REQUIRED)
   
 
-include_directories( ${OPENGL_INCLUDE_DIRS} include/)
+include_directories( ${OPENGL_INCLUDE_DIRS} include/ )
 
 
-add_executable(${NAME} EmptyWin.cpp PreLoad.cpp)
+add_executable(${NAME} EmptyWin.cpp PreLoad.cpp glad.c)
 target_link_libraries (${NAME}  ${OPENGL_LIBRARIES} ${WINLIBS})
