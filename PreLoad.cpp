@@ -10,6 +10,7 @@ using namespace std::literals;
 
 #ifdef OPENGL_VARIANT
 
+#include <ShaderData.h>
 
 
 PFNGLUSEPROGRAMPROC glUseProgram;
@@ -38,6 +39,8 @@ PFNGLUNIFORM1IPROC glUniform1i;
 PFNGLUNIFORMMATRIX4FVPROC glUniformMatrix4fv;
 PFNGLDELETEPROGRAMPROC glDeleteProgram;
 PFNGLDELETEVERTEXARRAYSPROC glDeleteVertexArray;
+PFNGLGETPROGRAMIVPROC glGetProgramiv; 
+PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog;
 
 
 // PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT;
@@ -95,12 +98,85 @@ if(GetWindowRect(*hwndLos, &rect)){
 
      mainContext = cinte;
      glViewport(0, 0, width, height);
+ 
+
+    //TODO: sdfwf
+
+   // build simple program 
+
+    glGenVertexArrays(1, &VAo_toSimpleProgram);
+    glBindVertexArray(VAo_toSimpleProgram);
+
+     simpleProgram = glCreateProgram();
+     
+
+    GLuint vertexOne = loadGLShader(GL_VERTEX_SHADER, vertexShader);
+    GLuint fragmeOne = loadGLShader(GL_FRAGMENT_SHADER, fragmentShader);
+    glAttachShader(simpleProgram, vertexOne);
+    glAttachShader(simpleProgram, fragmeOne);
+    glLinkProgram(simpleProgram);
+    LinkProgramLos(simpleProgram);
+    glValidateProgram(simpleProgram);
+    glDeleteShader(vertexOne);
+    glDeleteShader(fragmeOne);
+
+ 
+
+
+    // GLuint computeCount = glGetUniformLocation(normComputeProgram, "vertex");
+    // GLuint uvCount = glGetUniformLocation(normComputeProgram, "U");
+    // GLuint indexCount = glGetUniformLocation(normComputeProgram, "indexCount");
+
+
+   // loading astc texture's 
+   
+
+
+   // loading 3D model - gltf !    
+
+
+
 
      loadingAllElements = true;
 
 
      return true;
    }
+
+
+
+void  PreLoad::LinkProgramLos(GLuint program)
+{
+    GLint linkStatus = GL_FALSE;
+    std::cout << " setAxis 05 "<< "\n";
+    glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+    if(linkStatus != GL_TRUE)
+    {
+        std::cout << "Not sucseecs " << "\n";
+        GLint bufLength = 0;
+        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &bufLength);
+        if(bufLength > 0)
+        {
+            char* logBuffer = (char*) malloc(bufLength);
+
+            if(logBuffer != NULL)
+            {
+                glGetProgramInfoLog(program, bufLength, NULL, logBuffer);
+                std::cout << " Count not link program setAxis: " << logBuffer << "\n";
+                free(logBuffer);
+                logBuffer = NULL;
+            }
+        }
+        std::cout << " not compile Programs etAxis " << "\n";
+        glDeleteProgram(program);
+    }
+}
+
+
+
+
+
+
 
 const void PreLoad::CallingLoadingExtension() const noexcept{
 
@@ -134,6 +210,11 @@ const void PreLoad::CallingLoadingExtension() const noexcept{
 
     glDeleteProgram = (PFNGLDELETEPROGRAMPROC)wglGetProcAddress("glDeleteProgram");
     glDeleteVertexArray = (PFNGLDELETEVERTEXARRAYSPROC)wglGetProcAddress("glDeleteVertexArray");
+
+    glGetProgramiv = (PFNGLGETPROGRAMIVPROC)wglGetProcAddress("glGetProgramiv");
+    glGetProgramInfoLog = (PFNGLGETPROGRAMINFOLOGPROC)wglGetProcAddress("glGetProgramInfoLog");
+    
+  
   
     // wglChoosePixelFormatARB = (PFNWGLCHOOSEPIXELFORMATARBPROC)wglGetProcAddress("wglChoosePixelFormatARB");
     // wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)wglGetProcAddress("wglCreateContextAttribsARB");
@@ -167,6 +248,38 @@ const void PreLoad::QuitToApp() const noexcept{
     // 	std::this_thread::sleep_for(8s);
 
     // }
+
+    
+
+//      DWORD dwResult;    
+// for (DWORD i=0; i< XUSER_MAX_COUNT; i++ )
+// {
+//     XINPUT_STATE state;
+//     ZeroMemory( &state, sizeof(XINPUT_STATE) );
+
+//     // Simply get the state of the controller from XInput.
+//     dwResult = XInputGetState( i, &state );
+
+//     if( dwResult == ERROR_SUCCESS )
+//     { 
+//        std::cout << " controller is connected ! " << "\n";
+//         // Controller is connected
+//     }
+//     else
+//     {
+//       std::cout << " controller is diSconnected ! " << "\n";
+//         // Controller is not connected
+//     }
+// }
+
+
+
+
+
+
+
+
+
        
 
   }
@@ -202,6 +315,59 @@ const void PreLoad::QuitToApp() const noexcept{
  }
 
 
+
+GLuint  PreLoad::loadGLShader(GLenum enumsha, const char* shaderSource ) {
+    
+     GLuint shaderL;
+    GLint compiled;
+// ShaderT
+   //struct  ShaderT s{};
+    // logRun(" shader source == %s \n", shaderSource);
+
+    shaderL = glCreateShader(enumsha);
+    // logRun(" shader the 1 ! ");
+
+
+    if(shaderL != 0)
+    {
+        //  logRun(" shader the 2 ! ");
+        glShaderSource(shaderL, 1, &shaderSource, NULL);
+
+        //   logRun(" shader the 2.5s ! ");
+
+
+        glCompileShader(shaderL);
+
+
+        //logRun(" shader the 3s ! ");
+        compiled = 0;
+        glGetShaderiv(shaderL, GL_COMPILE_STATUS, &compiled);
+        if(compiled != GL_TRUE)
+        {
+
+            std::cout <<  "compiled not true !" << "\n";
+            GLint infoLen = 0;
+            glGetShaderiv(shaderL, GL_INFO_LOG_LENGTH, &infoLen);
+            if(infoLen > 0)
+            {
+
+                char * logBuffer = (char*) malloc(infoLen);
+                if(logBuffer != NULL)
+                {
+                    glGetShaderInfoLog(shaderL, infoLen, NULL, logBuffer);
+                    std::cout << " Could not Compile shader " << logBuffer << "\n";
+                    free(logBuffer);
+                    logBuffer = NULL;
+                }
+                glDeleteShader(shaderL);
+                shaderL = 0;
+            }
+        }
+        std::cout << " compiled shader Cube "<< "\n";
+    }
+    return shaderL;
+
+}
 
   const void PreLoad::MainRender() const noexcept {
       

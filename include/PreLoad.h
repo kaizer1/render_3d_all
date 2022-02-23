@@ -4,15 +4,24 @@
 #include <iostream>
 #include <thread>
 #include <vector>
-
+#include <sstream>
 
 #ifdef OPENGL_VARIANT
-#include <GL/GL.h>
-#include <sstream>
-#include <GL/glext.h>
+//#include <ASTC.h>
+// #include <GL/GL.h>
+// #include <GL/glext.h>
+
+#include <glmain.h>
 //#include <glad.h>
 
 #endif
+
+
+// TODO: Controllers 
+
+//#include <xinput.h> 
+
+
 
 class PreLoad {
 
@@ -40,5 +49,10 @@ class PreLoad {
   const void MainRender() const noexcept;
   HDC mainContext;
   HWND *hwndLos = nullptr;
+  GLuint  loadGLShader(GLenum enumsha, const char* shaderSource );
+  void  LinkProgramLos(GLuint program);
+
+  GLuint VAo_toSimpleProgram;
+  GLuint simpleProgram;
 
   };  
