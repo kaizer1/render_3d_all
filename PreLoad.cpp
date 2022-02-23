@@ -37,7 +37,7 @@ PreLoad::PreLoad() {
 
  
 
-      std::cout <<  " count my building ! " << "\n";
+      std::cout <<  " count my " << "\n";
      
         if (waitOrNorToExitConsole){
            
