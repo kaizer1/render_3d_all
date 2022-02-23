@@ -27,14 +27,29 @@ PreLoad* losLoad = nullptr;
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)                        
 {                                                                                                   
     if (losLoad != NULL)                                                                        
-    {                                                                                               
-        losLoad->handleMessages(hWnd, uMsg, wParam, lParam);                                    
+    {     
+
+     switch (message)
+    {
+         case WM_CREATE: 
+           {
+
+
+
+           }
+
+           return 0;
+
+    }
+
+
+
+
+        //losLoad->handleMessages(hWnd, uMsg, wParam, lParam);                                    
     }    
 
 
  
-
-
 
     return (DefWindowProc(hWnd, uMsg, wParam, lParam));                                             
 }       
