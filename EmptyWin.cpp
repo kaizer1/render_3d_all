@@ -29,7 +29,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     if (losLoad != NULL)                                                                        
     {     
 
-     switch (message)
+     switch (uMsg)
     {
          case WM_CREATE: 
            {
@@ -83,7 +83,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
   HWND hwnd = CreateWindowEx(
         0,                              // Optional window styles.
         CLASS_NAME,                     // Window class
-        (LPCWSTR)"Hello, WinApi!",    // Window text
+        (LPCWSTR) L"Hello, bolvanka",    // Window text
         WS_OVERLAPPEDWINDOW,            // Window style
 
         // Size and position
