@@ -83,7 +83,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
   HWND hwnd = CreateWindowEx(
         0,                              // Optional window styles.
         CLASS_NAME,                     // Window class
-        (LPCWSTR) L"DirectX Ultimate",    // Window text
+        (LPCWSTR) L"DirectX 12 Ultimate",    // Window text
         WS_OVERLAPPEDWINDOW,            // Window style
 
         // Size and position
