@@ -16,14 +16,20 @@ set(NAME render_3d)
 set(CMAKE_CXX_STANDARD 20)
 
 
+
+	find_library(Vulkan_LIBRARY NAMES vulkan-1 vulkan PATHS "C:/VulkanSDK/1.3.204.0/Lib" )
+		IF (Vulkan_LIBRARY)
+			set(Vulkan_FOUND ON)
+			MESSAGE("Using bundled Vulkan library version")
+		ENDIF()
+
+
 project(${NAME})
 
-
-find_package(OpenGL REQUIRED)
   
 
-include_directories( ${OPENGL_INCLUDE_DIRS} include/)
+include_directories(  include/)
 
 
 add_executable(${NAME} EmptyWin.cpp PreLoad.cpp)
-target_link_libraries (${NAME}  ${OPENGL_LIBRARIES} ${WINLIBS})
+target_link_libraries (${NAME} ${Vulkan_LIBRARY} ${WINLIBS})
