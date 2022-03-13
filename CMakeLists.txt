@@ -36,5 +36,5 @@ find_package(OpenGL REQUIRED)
 include_directories( ${OPENGL_INCLUDE_DIRS} include/ )
 
 
-add_executable(${NAME} EmptyWin.cpp PreLoad.cpp ASTC.cpp )
+add_executable(${NAME} Source/EmptyWin.cpp Source/PreLoad.cpp Source/ASTC.cpp )
 target_link_libraries (${NAME}  ${OPENGL_LIBRARIES} ${WINLIBS})

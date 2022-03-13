@@ -2,8 +2,10 @@
 
 
 #include <PreLoad.h>
+#include <string>
 #include <windows.h>
 #include <iostream>
+#include <fstream>
 
 using namespace std::literals;
 
@@ -153,11 +155,11 @@ if(GetWindowRect(*hwndLos, &rect)){
     // GLuint indexCount = glGetUniformLocation(normComputeProgram, "indexCount");
 
 
-   // loading astc texture's 
+   // loading astc texture's  etc, astc, dds, webp 
    
 
 
-   // loading 3D model - gltf !    
+   // loading 3D model - gltf !  gltf, fbx, obj, filamesh   
 
 
 
@@ -339,7 +341,30 @@ const void PreLoad::QuitToApp() const noexcept{
 
  }
 
+static std::string textFileRead(const char *fileName);
 
+static std::string textFileRead(const char *fileName) {
+    std::string fileString = std::string(); // A string for storing the file contents
+    std::string line = std::string(); // A string for holding the current line
+
+    std::ifstream file(fileName); // Open an input stream with the selected file
+    if (file.is_open()) { // If the file opened successfully
+        while (!file.eof()) { // While we are not at the end of the file
+            getline(file, line); // Get the current line
+            fileString.append(line); // Append the line to our file string
+            fileString.append("\n"); // Appand a new line character
+        }
+        file.close(); // Close the file
+    }
+
+    return fileString; // Return our string
+}
+
+
+
+
+
+ // loading .vert and .frag 
 GLuint PreLoad::loadGLShaderRes(GLenum enumsha, const char* shaderSource )
 {
 
@@ -352,40 +377,22 @@ GLuint PreLoad::loadGLShaderRes(GLenum enumsha, const char* shaderSource )
       if(fs::exists(p)){
         std::cout << "ok files exists " << "\n";
 
-  
-   GLuint shaderL;
+
+
+    GLuint shaderL;
     GLint compiled;
-// ShaderT
-   //struct  ShaderT s{};
-    // logRun(" shader source == %s \n", shaderSource);
 
     shaderL = glCreateShader(enumsha);
     // logRun(" shader the 1 ! ");
  
-  
-
-   FILE* shaderFile = fopen( shaderSource, "r");
-int fileSize = 0;
-char* vertex_shader = NULL;
-
-//Getting File Size
-fseek( shaderFile, 0, SEEK_END );
-fileSize = ftell( shaderFile );
-rewind( shaderFile );
- std::cout << " size my shader = " << fileSize << "\n";
-
-
-vertex_shader = (char*)malloc( sizeof( char) * (fileSize+1) );
-fread( vertex_shader, sizeof( char ), fileSize, shaderFile );
-//vertex_shader[ fileSize] = '\0';
-fclose( shaderFile );
-
+ std::string vsText = textFileRead(shaderSource); 
+  const char *vertexText = vsText.c_str();
 
 
     if(shaderL != 0)
     {
         //  logRun(" shader the 2 ! ");
-        glShaderSource(shaderL, 1, (const GLchar**)&vertex_shader, NULL);
+        glShaderSource(shaderL, 1, &vertexText, NULL);
 
         //   logRun(" shader the 2.5s ! ");
 
@@ -419,18 +426,6 @@ fclose( shaderFile );
         }
         std::cout << " compiled shader Cube "<< "\n";
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
       }else {
