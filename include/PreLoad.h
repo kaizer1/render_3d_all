@@ -50,6 +50,7 @@ class PreLoad {
   HDC mainContext;
   HWND *hwndLos = nullptr;
   GLuint  loadGLShader(GLenum enumsha, const char* shaderSource );
+  GLuint  loadGLShaderRes(GLenum enumsha, const char* shaderSource );
   void  LinkProgramLos(GLuint program);
 
   GLuint VAo_toSimpleProgram;

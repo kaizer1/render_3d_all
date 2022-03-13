@@ -13,6 +13,11 @@ using namespace std::literals;
 #include <ShaderData.h>
 
 
+#include <filesystem>
+namespace fs = std::filesystem;
+
+
+
 PFNGLUSEPROGRAMPROC glUseProgram;
 PFNGLCREATEPROGRAMPROC glCreateProgram;
 PFNGLCREATESHADERPROC glCreateShader;
@@ -33,7 +38,7 @@ PFNGLENABLEVERTEXATTRIBARRAYPROC glEnableVertexAttribArray;
 PFNGLBINDBUFFERPROC glBindBuffer;
 PFNGLBINDVERTEXARRAYPROC glBindVertexArray;
 PFNGLGENBUFFERSPROC glGenBuffers;
-PFNGLGENVERTEXARRAYSPROC glGenVertexArrays1;
+PFNGLGENVERTEXARRAYSPROC glGenVertexArrays;
 PFNGLACTIVETEXTUREPROC glActiveTexture;
 PFNGLUNIFORM1IPROC glUniform1i;
 PFNGLUNIFORMMATRIX4FVPROC glUniformMatrix4fv;
@@ -92,6 +97,7 @@ if(GetWindowRect(*hwndLos, &rect)){
   }
 
 
+
    const bool PreLoad::LoadingOpenGLPrograms(int width, int height, HDC cinte)  {
  
      std::cout << "start loading resources " << "\n";
@@ -106,22 +112,37 @@ if(GetWindowRect(*hwndLos, &rect)){
 
    // build simple program 
  std::cout << "we are resources loaded 2.1" << "\n";
-    glGenVertexArrays1(1, &VAo_toSimpleProgram);
+    glGenVertexArrays(1, &VAo_toSimpleProgram);
      std::cout << "we are resources loaded 2.2" << "\n";
     glBindVertexArray(VAo_toSimpleProgram);
  std::cout << "we are resources loaded 3" << "\n";
      simpleProgram = glCreateProgram();
       std::cout << "we are resources loaded 4" << "\n";
 
-    GLuint vertexOne = loadGLShader(GL_VERTEX_SHADER, vertexShader);
-    GLuint fragmeOne = loadGLShader(GL_FRAGMENT_SHADER, fragmentShader);
-    glAttachShader(simpleProgram, vertexOne);
-    glAttachShader(simpleProgram, fragmeOne);
-    glLinkProgram(simpleProgram);
-    LinkProgramLos(simpleProgram);
-    glValidateProgram(simpleProgram);
-    glDeleteShader(vertexOne);
-    glDeleteShader(fragmeOne);
+
+   // GLuint vertexOne = loadGLShader(GL_VERTEX_SHADER, vertexShader); // loading shader for .h 
+   // GLuint fragmeOne = loadGLShader(GL_FRAGMENT_SHADER, fragmentShader); // **** 
+
+     
+       
+     GLuint vertexOne = loadGLShaderRes(GL_VERTEX_SHADER, "assets/Shaders/ver1.vert"); // loading .vert .frag  to path 
+     GLuint fragmeOne = loadGLShaderRes(GL_FRAGMENT_SHADER, "assets/Shaders/fra1.frag"); 
+
+
+     //GLuint vertexOne = loadGLShader(GL_VERTEX_SHADER, "assets/Shaders/vertex.glsl"); // loading .vert .frag  to path 
+     //GLuint fragmeOne = loadGLShader(GL_FRAGMENT_SHADER, "assets/Shaders.fragment.glsl");
+
+
+
+    // glAttachShader(simpleProgram, vertexOne);
+    // glAttachShader(simpleProgram, fragmeOne);
+    // glLinkProgram(simpleProgram);
+    // LinkProgramLos(simpleProgram);
+    // glValidateProgram(simpleProgram);
+    // glDeleteShader(vertexOne);
+    // glDeleteShader(fragmeOne);
+
+
 
  
  std::cout << "we are resources loaded 3" << "\n";
@@ -207,7 +228,7 @@ const void PreLoad::CallingLoadingExtension() const noexcept{
     glBindBuffer = (PFNGLBINDBUFFERPROC)wglGetProcAddress("glBindBuffer");
     glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)wglGetProcAddress("glBindVertexArray");
     glGenBuffers = (PFNGLGENBUFFERSPROC)wglGetProcAddress("glGenBuffers");
-    glGenVertexArrays1 = (PFNGLGENVERTEXARRAYSPROC)wglGetProcAddress("glGenVertexArrays");
+    glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)wglGetProcAddress("glGenVertexArrays");
     glActiveTexture = (PFNGLACTIVETEXTUREPROC)wglGetProcAddress("glActiveTexture");
     glUniform1i = (PFNGLUNIFORM1IPROC)wglGetProcAddress("glUniform1i");
     glUniformMatrix4fv = (PFNGLUNIFORMMATRIX4FVPROC)wglGetProcAddress("glUniformMatrix4fv");
@@ -319,10 +340,114 @@ const void PreLoad::QuitToApp() const noexcept{
  }
 
 
+GLuint PreLoad::loadGLShaderRes(GLenum enumsha, const char* shaderSource )
+{
+
+  GLuint shaderL = 1;
+
+    std::cout << " my path == " << shaderSource << "\n";
+  
+   fs::path p = shaderSource;
+
+      if(fs::exists(p)){
+        std::cout << "ok files exists " << "\n";
+
+  
+   GLuint shaderL;
+    GLint compiled;
+// ShaderT
+   //struct  ShaderT s{};
+    // logRun(" shader source == %s \n", shaderSource);
+
+    shaderL = glCreateShader(enumsha);
+    // logRun(" shader the 1 ! ");
+ 
+  
+
+   FILE* shaderFile = fopen( shaderSource, "r");
+int fileSize = 0;
+char* vertex_shader = NULL;
+
+//Getting File Size
+fseek( shaderFile, 0, SEEK_END );
+fileSize = ftell( shaderFile );
+rewind( shaderFile );
+ std::cout << " size my shader = " << fileSize << "\n";
+
+
+vertex_shader = (char*)malloc( sizeof( char) * (fileSize+1) );
+fread( vertex_shader, sizeof( char ), fileSize, shaderFile );
+//vertex_shader[ fileSize] = '\0';
+fclose( shaderFile );
+
+
+
+    if(shaderL != 0)
+    {
+        //  logRun(" shader the 2 ! ");
+        glShaderSource(shaderL, 1, (const GLchar**)&vertex_shader, NULL);
+
+        //   logRun(" shader the 2.5s ! ");
+
+
+        glCompileShader(shaderL);
+
+
+        //logRun(" shader the 3s ! ");
+        compiled = 0;
+        glGetShaderiv(shaderL, GL_COMPILE_STATUS, &compiled);
+        if(compiled != GL_TRUE)
+        {
+
+            std::cout <<  "compiled not true !" << "\n";
+            GLint infoLen = 0;
+            glGetShaderiv(shaderL, GL_INFO_LOG_LENGTH, &infoLen);
+            if(infoLen > 0)
+            {
+
+                char * logBuffer = (char*) malloc(infoLen);
+                if(logBuffer != NULL)
+                {
+                    glGetShaderInfoLog(shaderL, infoLen, NULL, logBuffer);
+                    std::cout << " Could not Compile shader " << logBuffer << "\n";
+                    free(logBuffer);
+                    logBuffer = NULL;
+                }
+                glDeleteShader(shaderL);
+                shaderL = 0;
+            }
+        }
+        std::cout << " compiled shader Cube "<< "\n";
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      }else {
+         std::cout << " files not exists !" << "\n";
+      }
+   // filesystem check file exists ! 
+
+
+  return shaderL;
+
+}
+
+
 
 GLuint  PreLoad::loadGLShader(GLenum enumsha, const char* shaderSource ) {
     
-     GLuint shaderL;
+    GLuint shaderL;
     GLint compiled;
 // ShaderT
    //struct  ShaderT s{};
@@ -380,7 +505,7 @@ GLuint  PreLoad::loadGLShader(GLenum enumsha, const char* shaderSource ) {
     glClearColor(0.921F, 0.901F, 0.84F, 1.0F);
 
  
-   std::cout <<" in render " << "\n";
+   //std::cout <<" in render " << "\n";
 
 
   SwapBuffers(mainContext);
