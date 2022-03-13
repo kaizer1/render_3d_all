@@ -2,7 +2,11 @@
 
 //#include "ASTC.h"
 //#include <GL/GL.h>
-//#include <filesystem>
+#include <iostream>
+#include <filesystem>
+#include <ASTC.h>
+
+
 namespace fs = std::filesystem;
 
 static const int OFFSEtF = 0;
@@ -19,7 +23,7 @@ enum textureFormat {
 
 
 
-void LoadASTCImage(const char* name,losFormatASTC astcs, unsigned int* texutID)
+void LoadASTCImage(const char* name, losFormatASTC astcs, unsigned int* texutID)
 {
     //unsigned char* buffer_forLosImage = NULL;
  

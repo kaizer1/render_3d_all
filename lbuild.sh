@@ -1,3 +1,6 @@
 #build project
 #bach -c "cd Buildsl/"
-bach -c "cmake Buildsl/"
+bash -c "cd Buildsl/"
+bash -c "pwd"
+#bash -c "cmake ../"
+read -p "Press any key to resume ..."

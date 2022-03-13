@@ -33,7 +33,7 @@ PFNGLENABLEVERTEXATTRIBARRAYPROC glEnableVertexAttribArray;
 PFNGLBINDBUFFERPROC glBindBuffer;
 PFNGLBINDVERTEXARRAYPROC glBindVertexArray;
 PFNGLGENBUFFERSPROC glGenBuffers;
-PFNGLGENVERTEXARRAYSPROC glGenVertexArrays;
+PFNGLGENVERTEXARRAYSPROC glGenVertexArrays1;
 PFNGLACTIVETEXTUREPROC glActiveTexture;
 PFNGLUNIFORM1IPROC glUniform1i;
 PFNGLUNIFORMMATRIX4FVPROC glUniformMatrix4fv;
@@ -96,19 +96,22 @@ if(GetWindowRect(*hwndLos, &rect)){
  
      std::cout << "start loading resources " << "\n";
 
+     CallingLoadingExtension();
+
      mainContext = cinte;
      glViewport(0, 0, width, height);
  
-
+ std::cout << "we are resources loaded 2" << "\n";
     //TODO: sdfwf
 
    // build simple program 
-
-    glGenVertexArrays(1, &VAo_toSimpleProgram);
+ std::cout << "we are resources loaded 2.1" << "\n";
+    glGenVertexArrays1(1, &VAo_toSimpleProgram);
+     std::cout << "we are resources loaded 2.2" << "\n";
     glBindVertexArray(VAo_toSimpleProgram);
-
+ std::cout << "we are resources loaded 3" << "\n";
      simpleProgram = glCreateProgram();
-     
+      std::cout << "we are resources loaded 4" << "\n";
 
     GLuint vertexOne = loadGLShader(GL_VERTEX_SHADER, vertexShader);
     GLuint fragmeOne = loadGLShader(GL_FRAGMENT_SHADER, fragmentShader);
@@ -121,6 +124,7 @@ if(GetWindowRect(*hwndLos, &rect)){
     glDeleteShader(fragmeOne);
 
  
+ std::cout << "we are resources loaded 3" << "\n";
 
 
     // GLuint computeCount = glGetUniformLocation(normComputeProgram, "vertex");
@@ -136,7 +140,7 @@ if(GetWindowRect(*hwndLos, &rect)){
 
 
 
-
+ std::cout << "we are resources loaded final " << "\n";
      loadingAllElements = true;
 
 
@@ -203,7 +207,7 @@ const void PreLoad::CallingLoadingExtension() const noexcept{
     glBindBuffer = (PFNGLBINDBUFFERPROC)wglGetProcAddress("glBindBuffer");
     glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)wglGetProcAddress("glBindVertexArray");
     glGenBuffers = (PFNGLGENBUFFERSPROC)wglGetProcAddress("glGenBuffers");
-    glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)wglGetProcAddress("glGenBuffers");
+    glGenVertexArrays1 = (PFNGLGENVERTEXARRAYSPROC)wglGetProcAddress("glGenVertexArrays");
     glActiveTexture = (PFNGLACTIVETEXTUREPROC)wglGetProcAddress("glActiveTexture");
     glUniform1i = (PFNGLUNIFORM1IPROC)wglGetProcAddress("glUniform1i");
     glUniformMatrix4fv = (PFNGLUNIFORMMATRIX4FVPROC)wglGetProcAddress("glUniformMatrix4fv");
@@ -375,6 +379,8 @@ GLuint  PreLoad::loadGLShader(GLenum enumsha, const char* shaderSource ) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(0.921F, 0.901F, 0.84F, 1.0F);
 
+ 
+   std::cout <<" in render " << "\n";
 
 
   SwapBuffers(mainContext);
