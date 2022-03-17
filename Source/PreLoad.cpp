@@ -58,7 +58,7 @@ PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog;
 
 
 
-PreLoad::PreLoad() {
+PreLoad::PreLoad() : rotateY {0.0f} {
 	
 
 	AllocConsole();
@@ -67,7 +67,7 @@ PreLoad::PreLoad() {
 	freopen_s(&stream, "CONOUT$", "w+", stdout);
 	freopen_s(&stream, "CONOUT$", "w+", stderr);
 	SetConsoleTitle(TEXT(" Work in my Render "));
-
+    
  
   std::cout << " calling this  ! " << "\n";
 
@@ -130,15 +130,19 @@ if(GetWindowRect(*hwndLos, &rect)){
      glAttachShader(testRecrangleProgram, vertexOne);
      glAttachShader(testRecrangleProgram, fragmeOne);
      glLinkProgram(testRecrangleProgram);
-     LinkProgramLos(testRecrangleProgram);
+     //LinkProgramLos(testRecrangleProgram);
      glValidateProgram(testRecrangleProgram);
 
+  
+
+     //checkError();
+     glGetError();
     
      glBindAttribLocation(testRecrangleProgram, 0, "vertex_main");
      glBindAttribLocation(testRecrangleProgram, 1, "color_main");
      matrixTestRect = glGetUniformLocation(testRecrangleProgram, "matrix_main");
 
-        
+        \ glGetError();
 
      float  aVertexTestRect [9]= {
          0.2f, 0.4f, 0.0f,
@@ -221,14 +225,16 @@ if(GetWindowRect(*hwndLos, &rect)){
 
 void  PreLoad::LinkProgramLos(GLuint program)
 {
-    GLint linkStatus = GL_FALSE;
+    GLint linkStatus; // was = GL_FALSE;
     std::cout << " setAxis 05 "<< "\n";
     glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+    std::cout << " my link status == " << linkStatus << " \n";
     if(linkStatus != GL_TRUE)
     {
         std::cout << "Not sucseecs " << "\n";
         GLint bufLength = 0;
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &bufLength);
+        std::cout << " my bufLenght == " << bufLength << " \n";
         if(bufLength > 0)
         {
             char* logBuffer = (char*) malloc(bufLength);
@@ -240,6 +246,8 @@ void  PreLoad::LinkProgramLos(GLuint program)
                 free(logBuffer);
                 logBuffer = NULL;
             }
+        } else {
+             std::cout << " bufLength <= o " << "\n";
         }
         std::cout << " not compile Programs etAxis " << "\n";
         glDeleteProgram(program);
@@ -349,16 +357,7 @@ const void PreLoad::QuitToApp() const noexcept{
 
 
 
-
-
-
-
-
-
-       
-
   }
-
 
 
  void PreLoad::handleMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
@@ -598,16 +597,18 @@ const void PreLoad::loadMyMatrix() const noexcept {
     // glBindTexture(GL_TEXTURE_2D, astcIDBall); // was  BallRecamp
 
     LosMatrix4_4 LosBamboo= identity();
-    LosBamboo.ScaleLos(LosVector3(2.0f, 2.0f, 2.0f));
-    LosBamboo.rotateLosY(rotateY);
-    LosMatrix4_4 finalTestMatrix = pers * LookAt * LosBamboo;
+    //LosBamboo.ScaleLos(LosVector3(2.0f, 2.0f, 2.0f));
+    //LosBamboo.rotateLosY(rotateY);
+    //LosBamboo.
+    LosMatrix4_4 finalTestMatrix = pers * LookAt; // * LosBamboo;
 
 
-    glUniformMatrix4fv(matrixTestRect, 1, GL_FALSE, &finalTestMatrix.elements[0][0]);
+    //glUniformMatrix4fv(matrixTestRect, 1, GL_FALSE, &finalTestMatrix.elements[0][0]);
     glDrawArrays(GL_TRIANGLES, 0, 3); // no needed to proc exists !!
 
    // callChange();
     rotateY += 1.0f;
+    std::cout << " my rotate == " << rotateY << "\n";
 
 
   SwapBuffers(mainContext);
