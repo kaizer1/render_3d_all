@@ -8,7 +8,7 @@
 #include <fstream>
 
 using namespace std::literals;
-
+static constexpr auto VERTEX_OFFSET = 0;
 
 #ifdef OPENGL_VARIANT
 
@@ -48,6 +48,8 @@ PFNGLDELETEPROGRAMPROC glDeleteProgram;
 PFNGLDELETEVERTEXARRAYSPROC glDeleteVertexArray;
 PFNGLGETPROGRAMIVPROC glGetProgramiv; 
 PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog;
+
+//PFNGLDRAWARRAYSPROC glDrawArrays;
 
 
 // PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT;
@@ -105,46 +107,91 @@ if(GetWindowRect(*hwndLos, &rect)){
      std::cout << "start loading resources " << "\n";
 
      CallingLoadingExtension();
-
      mainContext = cinte;
+     mainWidth = (int32_t)width;
+     mainHeight = (int32_t)height;
      glViewport(0, 0, width, height);
- 
- std::cout << "we are resources loaded 2" << "\n";
-    //TODO: sdfwf
-
-   // build simple program 
- std::cout << "we are resources loaded 2.1" << "\n";
-    glGenVertexArrays(1, &VAo_toSimpleProgram);
-     std::cout << "we are resources loaded 2.2" << "\n";
-    glBindVertexArray(VAo_toSimpleProgram);
- std::cout << "we are resources loaded 3" << "\n";
-     simpleProgram = glCreateProgram();
-      std::cout << "we are resources loaded 4" << "\n";
 
 
-   // GLuint vertexOne = loadGLShader(GL_VERTEX_SHADER, vertexShader); // loading shader for .h 
-   // GLuint fragmeOne = loadGLShader(GL_FRAGMENT_SHADER, fragmentShader); // **** 
+    glGenVertexArrays(1, &testRec.vao);
+    glBindVertexArray(testRec.vao);
+    testRecrangleProgram = glCreateProgram();
 
-     
-       
+
+     //GLuint vertexOne = loadGLShader(GL_VERTEX_SHADER, vertexShader); // loading shader for .h 
+     //GLuint fragmeOne = loadGLShader(GL_FRAGMENT_SHADER, fragmentShader); // **** 
      GLuint vertexOne = loadGLShaderRes(GL_VERTEX_SHADER, "assets/Shaders/ver1.vert"); // loading .vert .frag  to path 
      GLuint fragmeOne = loadGLShaderRes(GL_FRAGMENT_SHADER, "assets/Shaders/fra1.frag"); 
-
-
      //GLuint vertexOne = loadGLShader(GL_VERTEX_SHADER, "assets/Shaders/vertex.glsl"); // loading .vert .frag  to path 
      //GLuint fragmeOne = loadGLShader(GL_FRAGMENT_SHADER, "assets/Shaders.fragment.glsl");
 
 
+    
+     glAttachShader(testRecrangleProgram, vertexOne);
+     glAttachShader(testRecrangleProgram, fragmeOne);
+     glLinkProgram(testRecrangleProgram);
+     LinkProgramLos(testRecrangleProgram);
+     glValidateProgram(testRecrangleProgram);
 
-    // glAttachShader(simpleProgram, vertexOne);
-    // glAttachShader(simpleProgram, fragmeOne);
-    // glLinkProgram(simpleProgram);
-    // LinkProgramLos(simpleProgram);
-    // glValidateProgram(simpleProgram);
-    // glDeleteShader(vertexOne);
-    // glDeleteShader(fragmeOne);
+    
+     glBindAttribLocation(testRecrangleProgram, 0, "vertex_main");
+     glBindAttribLocation(testRecrangleProgram, 1, "color_main");
+     matrixTestRect = glGetUniformLocation(testRecrangleProgram, "matrix_main");
+
+        
+
+     float  aVertexTestRect [9]= {
+         0.2f, 0.4f, 0.0f,
+         0.5f, 0.9f, 0.0f,
+         1.0f, 0.4f, 0.0f 
+     };
+
+    float aFragmetnRect [6]= {
+       0.238f, 0.218f,
+       0.873f, 0.031f,
+       0.461f, 0.001f
+    };
 
 
+
+        GLuint bufferf1, bufferf2, bufferf3, buUnirr4;
+        glGenBuffers(1, &bufferf1);
+        glGenBuffers(1, &bufferf2);
+        //glGenBuffers(1, &bufferf3);
+        //glGenBuffers(1, &buUnirr4);
+
+
+          glBindBuffer(GL_ARRAY_BUFFER, bufferf1);
+        {
+            glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), aVertexTestRect, GL_STATIC_DRAW);
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (const void*) VERTEX_OFFSET);
+            glEnableVertexAttribArray(0);
+        }
+
+        glBindBuffer(GL_ARRAY_BUFFER, bufferf2);
+        {
+            glBufferData(GL_ARRAY_BUFFER,  6 * sizeof(float), aFragmetnRect, GL_STATIC_DRAW);
+            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (const void*) VERTEX_OFFSET);
+            glEnableVertexAttribArray(1);
+        }
+       
+        // glBindBuffer(GL_ARRAY_BUFFER, bufferf3);
+        // {
+        //     glBufferData(GL_ARRAY_BUFFER,  normCountAssets * sizeof(float), bNPillar, GL_STATIC_DRAW);
+        //     glVertexAttribPointer(2, 3, GL_HALF_FLOAT, GL_FALSE, 0, (const void*) VERTEX_OFFSET);
+        //     glEnableVertexAttribArray(2);
+        // }
+
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buUnirr4);
+
+        // BIGS ERROR !!!
+        // RY glBufferData (GLenum target, GLsizeiptr size, const void *data, GLenum usage)
+       // GLsizei size = losIndexesAssets * sizeof(GL_UNSIGNED_SHORT);  // was losIndexesAssets * sizeof(GL_UNSIGNED_SHORT)
+        //GLushort 
+
+        //glBufferData(GL_ELEMENT_ARRAY_BUFFER, losIndexesAssets * sizeof(unsigned  short), bIndexAssets, GL_STATIC_DRAW);
+
+        glBindVertexArray(0);
 
  
  std::cout << "we are resources loaded 3" << "\n";
@@ -229,6 +276,7 @@ const void PreLoad::CallingLoadingExtension() const noexcept{
     glEnableVertexAttribArray = (PFNGLENABLEVERTEXATTRIBARRAYPROC)wglGetProcAddress("glEnableVertexAttribArray");
     glBindBuffer = (PFNGLBINDBUFFERPROC)wglGetProcAddress("glBindBuffer");
     glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)wglGetProcAddress("glBindVertexArray");
+    //glDrawArrays = (PFNGLDRAWARRAYSPROC)wglGetProcAddress("glDrawArrays");
     glGenBuffers = (PFNGLGENBUFFERSPROC)wglGetProcAddress("glGenBuffers");
     glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)wglGetProcAddress("glGenVertexArrays");
     glActiveTexture = (PFNGLACTIVETEXTUREPROC)wglGetProcAddress("glActiveTexture");
@@ -317,6 +365,7 @@ const void PreLoad::QuitToApp() const noexcept{
   
         std::cout << " in handle messages " << "\n";
 
+
  } 
 
 
@@ -327,7 +376,7 @@ const void PreLoad::QuitToApp() const noexcept{
  }
 
 
- const void PreLoad::PreRender() const
+void PreLoad::PreRender()
  { 
 
    if(loadingAllElements){
@@ -360,6 +409,9 @@ static std::string textFileRead(const char *fileName) {
     return fileString; // Return our string
 }
 
+
+
+ 
 
 
 
@@ -481,7 +533,7 @@ GLuint  PreLoad::loadGLShader(GLenum enumsha, const char* shaderSource ) {
                     glGetShaderInfoLog(shaderL, infoLen, NULL, logBuffer);
                     std::cout << " Could not Compile shader " << logBuffer << "\n";
                     free(logBuffer);
-                    logBuffer = NULL;
+                    logBuffer = nullptr;
                 }
                 glDeleteShader(shaderL);
                 shaderL = 0;
@@ -493,17 +545,73 @@ GLuint  PreLoad::loadGLShader(GLenum enumsha, const char* shaderSource ) {
 
 }
 
-  const void PreLoad::MainRender() const noexcept {
+
+const void PreLoad::loadMyMatrix() const noexcept {
+
+ 
+}
+
+
+ 
+  void PreLoad::callChange() noexcept {
+       rotateY += 1.0f;
+  }
+
+ void PreLoad::MainRender() noexcept {
       
+
+ // start render time 
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(0.921F, 0.901F, 0.84F, 1.0F);
 
  
+    loadMyMatrix();
+
+
+        LosVector3 eye2 = LosVector3{0.2f, 1.3f, 1.9f};  // secondsCamera
+     LosVector3 eye3 = LosVector3{-2.6f, 2.2f, -0.4f};  // thirdsCamera
+     LosVector3 up {0, 1, 0};
+    LosVector3 cent = LosVector3 {0.4f, 0.0f, 0.0f};
+     LosMatrix4_4 er = identity();
+
+ // w/ h
+   LosMatrix4_4 pers = perspectiveLosRithg(45.0f, (float) mainWidth/mainHeight, 0.1f, 100.f);
+   LosMatrix4_4  LookAt =  LookAt_RightLos(eye2, cent, up, er);
    //std::cout <<" in render " << "\n";
+
+ 
+
+ // 2d 
+
+
+
+
+  // 3d 
+
+
+    glUseProgram(testRecrangleProgram); // forgot to add this program and get error : uniform data type is an invalid data type
+    glBindVertexArray(testRec.vao);
+
+    // glActiveTexture(GL_TEXTURE0);
+    // glUniform1i(testRectImage, 0);
+    // glBindTexture(GL_TEXTURE_2D, astcIDBall); // was  BallRecamp
+
+    LosMatrix4_4 LosBamboo= identity();
+    LosBamboo.ScaleLos(LosVector3(2.0f, 2.0f, 2.0f));
+    LosBamboo.rotateLosY(rotateY);
+    LosMatrix4_4 finalTestMatrix = pers * LookAt * LosBamboo;
+
+
+    glUniformMatrix4fv(matrixTestRect, 1, GL_FALSE, &finalTestMatrix.elements[0][0]);
+    glDrawArrays(GL_TRIANGLES, 0, 3); // no needed to proc exists !!
+
+   // callChange();
+    rotateY += 1.0f;
 
 
   SwapBuffers(mainContext);
-
+ 
+ // end's render time 
 
   }

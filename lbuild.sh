@@ -10,7 +10,9 @@ bash -c "cp -r assets Buildsl/Release/"
 
 cd Buildsl/
 
-echo "my files reading this "
+echo "  "
+echo " Start compile project render_3d *** "
+echo " "
 
 cmake ../ 
 
@@ -24,6 +26,7 @@ echo " "
 echo "****** cmake ok build ******"
 echo " "
 
+# was cmake --build .
 cmake --build .
 
 

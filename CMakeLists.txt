@@ -7,6 +7,8 @@ MESSAGE (STATUS " building start ")
 set(NAME render_3d)
 
 
+# ok start Release !!! 
+#set(CMAKE_CONFIGURATION_TYPES "Release" CACHE STRING "" FORCE)
 set(CMAKE_CXX_COMPILER "C:/Program Files/LLVM/bin/clang++")
 set(CMAKE_C_COMPILER "C:/Program Files/LLVM/bin/clang")
 
@@ -28,13 +30,21 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DOPENGL_VARIANT")
 
 project(${NAME})
 
+add_subdirectory(LosMath)
+list(APPEND EXTRA_LIBS LosMath)
+
+#target_link_libraries(${NAME} PUBLIC Extern/LosMath)
+
+
 
 find_package(OpenGL REQUIRED)
 
 
 
-include_directories( ${OPENGL_INCLUDE_DIRS} include/ )
+include_directories( ${OPENGL_INCLUDE_DIRS} include/  LosMath/include)
+
 
 
 add_executable(${NAME} Source/EmptyWin.cpp Source/PreLoad.cpp Source/ASTC.cpp )
-target_link_libraries (${NAME}  ${OPENGL_LIBRARIES} ${WINLIBS})
+target_link_libraries (${NAME}  ${OPENGL_LIBRARIES} ${WINLIBS}  lMath )
+#target_compile_definitions(${NAME} PRIVATE $<$<CONFIG:Release>:RELEASE_BUILD> )
