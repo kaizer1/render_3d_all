@@ -14,4 +14,4 @@
        
   finalCl = vec4(finalColor.xy, 0.4, 1.0); 
 
- }
+ };

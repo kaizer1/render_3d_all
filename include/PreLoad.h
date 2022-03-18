@@ -1,5 +1,7 @@
-// Loskuntikov Games inc. 2022
+// Loskutnikov Games inc. 2022
  
+#pragma once
+
 #include <windows.h>
 #include <iostream>
 #include <thread>
@@ -7,25 +9,64 @@
 #include <sstream>
 #include <functional>
 
-#ifdef OPENGL_VARIANT
 //#include <ASTC.h>
-// #include <GL/GL.h>
-// #include <GL/glext.h>
 
 #include <glmain.h>
-//#include <glad.h>
 
-#endif
+
+#define DEBUG_SOURCE_API                                 0x8246
+#define DEBUG_SOURCE_WINDOW_SYSTEM                       0x8247
+#define DEBUG_SOURCE_SHADER_COMPILER                     0x8248
+#define DEBUG_SOURCE_THIRD_PARTY                         0x8249
+#define DEBUG_SOURCE_APPLICATION                         0x824A
+#define DEBUG_SOURCE_OTHER                               0x824B
+
+
+
+
+
+#define DEBUG_TYPE_ERROR                                 0x824C
+#define DEBUG_TYPE_DEPRECATED_BEHAVIOR                   0x824D
+#define DEBUG_TYPE_UNDEFINED_BEHAVIOR                    0x824E
+#define DEBUG_TYPE_PORTABILITY                           0x824F
+#define DEBUG_TYPE_PERFORMANCE                           0x8250
+#define DEBUG_TYPE_OTHER                                 0x8251
+#define DEBUG_TYPE_MARKER                                0x8268
 
 
 // my math 
 #include <MatAndVectOperators.hpp>
+#include <ASTC.h>
 
+#include <stdlib.h>
+//#include <unistd.h>
+
+typedef unsigned short uint16;
 // TODO: Controllers 
 
 //#include <xinput.h> 
 
 
+
+enum losFormatASTC : uint32_t {
+    tenForsixe,
+    tenForEight,
+    tenForTen,
+    tenForTenNotAlpha
+};
+
+typedef struct
+{
+    unsigned char  magic[4];
+    unsigned char  blockdim_x;
+    unsigned char  blockdim_y;
+    unsigned char  blockdim_z;
+    unsigned char  xsize[3];   /* x-size = xsize[0] + xsize[1] + xsize[2] */
+    unsigned char  ysize[3];   /* x-size, y-size and z-size are given in texels */
+    unsigned char  zsize[3];   /* block count is inferred */
+} astc_header;
+
+void LoadASTCImage(const char* name, losFormatASTC astcs, unsigned int* texutID);
 
 
 struct aabbReturn
@@ -208,6 +249,7 @@ class PreLoad {
 
        void handleMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
    	 void callMainBuildWindow() noexcept; 
+     void loadDDSTexture(const char* name, unsigned int* texutID);
        bool InstallWindow(HINSTANCE hInstance, int nCmdShow);
        const void QuitToApp() const noexcept;
        const void CallingLoadingExtension() const noexcept;
@@ -226,7 +268,9 @@ class PreLoad {
   HWND *hwndLos = nullptr;
   GLuint  loadGLShader(GLenum enumsha, const char* shaderSource );
   GLuint  loadGLShaderRes(GLenum enumsha, const char* shaderSource );
+  void Loaded3DStaticModel(LosModel& model, const char* nameModel, bool vaos); 
   void  LinkProgramLos(GLuint program);
+  void LoadASTCImage(const char* name, losFormatASTC astcs, unsigned int* texutID);
   void callChange() noexcept;
 
   GLuint VAo_toSimpleProgram;
@@ -239,4 +283,12 @@ class PreLoad {
   float rotateY;
   //LosMatrix4_4 pers, LookAt;
   LosModel testRec;
+
+  GLuint l3DViewProgram;
+  LosModel main3DObjects;
+
+
+ GLuint matrix3dModelView, matrix3dPositionView, vLight,vCam; 
+ GLuint swordID, samplerSword;
+ 
   };  

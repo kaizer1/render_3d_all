@@ -45,6 +45,6 @@ include_directories( ${OPENGL_INCLUDE_DIRS} include/  LosMath/include)
 
 
 
-add_executable(${NAME} Source/EmptyWin.cpp Source/PreLoad.cpp Source/ASTC.cpp )
+add_executable(${NAME} Source/EmptyWin.cpp Source/PreLoad.cpp Source/ASTC.cpp )  # was Source/ASTC.cpp 
 target_link_libraries (${NAME}  ${OPENGL_LIBRARIES} ${WINLIBS}  lMath )
 #target_compile_definitions(${NAME} PRIVATE $<$<CONFIG:Release>:RELEASE_BUILD> )

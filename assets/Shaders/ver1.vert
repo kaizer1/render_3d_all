@@ -11,4 +11,4 @@ void main ()
 
    gl_Position = matrix_main * vec4(vertex_main, 1);
    finalColor = color_main;
-}
+};

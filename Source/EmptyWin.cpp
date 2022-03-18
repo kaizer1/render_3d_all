@@ -156,10 +156,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             HDC hdc = BeginPaint(hWnd, &ps);
 
             losLoad->handleMessages(hWnd, uMsg, wParam, lParam);    
-
+            //losLoad->PreRender();     
 
             FillRect(hdc, &ps.rcPaint, (HBRUSH) (COLOR_WINDOW+1));
-
             EndPaint(hWnd, &ps);
           }
           return 0;
@@ -168,8 +167,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
           case WM_CREATE:
              {
                std::cout << "WM_CREATE " << "\n";
-  
-#ifdef OPENGL_VARIANT 
 
     HDC hdc = GetDC(hWnd);
 
@@ -191,6 +188,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
  
      std::cout << " gl version = " << glGetString(GL_VERSION) << " \n";
+     //std::cout << " gl version = " << glGetString(GL_EXTENSIONS) << " \n";
      //std::string versionString = glGetString(GL_VERSION);
      //std::string suVersionString = versionString.substr(0, 3);
      //std::cout << " my version strings == " << suVersionString.c_str() << "\n";
@@ -247,14 +245,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     }
     
 
-      losLoad->LoadingOpenGLPrograms(400, 700, hdc);
-      
-  
-#endif               
-
-
-
-             }
+      losLoad->LoadingOpenGLPrograms(1920, 1015, hdc);
+                   
+}
              return 0;
 
 
@@ -276,15 +269,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         case WM_MOUSEMOVE: 
       { 
          
- 
+             
           
         }
             break; 
  
         case WM_LBUTTONUP: 
  
-          
-           
             ReleaseCapture(); 
             return 0; 
 
@@ -303,18 +294,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                          PostQuitMessage(0);
                        }  
                 }
-        }
+          }
           break;
-
-
-
 
             return 0;
 
-      }
-                                      
+      }                             
     }    
-
 
     return (DefWindowProc(hWnd, uMsg, wParam, lParam));                                             
 }       
@@ -373,16 +359,15 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
    MSG msg = { };
     while (GetMessage(&msg, NULL, 0, 0))
     {
-
+           std::cout << " GetMessage ! " << " \n";
          if(!TranslateAccelerator(msg.hwnd, hAccelTable , &msg))
          {
 
         TranslateMessage(&msg);
         DispatchMessage(&msg);
          }
-  
 
-      losLoad->PreRender(); //  RenderLos()
+      losLoad->PreRender(); 
     }
 
  
@@ -395,11 +380,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
      for (int32_t i = 0; i < __argc; i++) {  std::cout << " wefwe " << "\n"; };
 
 
-
  losLoad->callMainBuildWindow();
 
 
 return 1;
-
  
-  }
+}
