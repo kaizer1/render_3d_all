@@ -5,6 +5,10 @@
 #include <thread>
 #include <vector>
 
+#include <d3d12.h>
+
+
+
 
 class PreLoad {
 
