@@ -248,7 +248,7 @@ class PreLoad {
 
 
        void handleMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-   	 void callMainBuildWindow() noexcept; 
+   	 // void callMainBuildWindow() noexcept; 
      void loadDDSTexture(const char* name, unsigned int* texutID);
        bool InstallWindow(HINSTANCE hInstance, int nCmdShow);
        const void QuitToApp() const noexcept;

@@ -193,11 +193,6 @@ PreLoad::PreLoad() : rotateY {0.0f} {
  
   std::cout << " calling this  ! " << "\n";
 
-
-
-
-
-
 }
 
 
@@ -729,50 +724,6 @@ const void PreLoad::QuitToApp() const noexcept{
   FreeConsole(); // not working !!! 
 }
 
-  void PreLoad::callMainBuildWindow() noexcept{
-
- 
-
-      std::cout <<  " count my building ! " << "\n";
-     
-    //     if (waitOrNorToExitConsole){
-           
-    //         while(1){
-
-    //         }
-          
-    // }else{
-    	
-    // 	std::this_thread::sleep_for(8s);
-
-    // }
-
-    
-
-//      DWORD dwResult;    
-// for (DWORD i=0; i< XUSER_MAX_COUNT; i++ )
-// {
-//     XINPUT_STATE state;
-//     ZeroMemory( &state, sizeof(XINPUT_STATE) );
-
-//     // Simply get the state of the controller from XInput.
-//     dwResult = XInputGetState( i, &state );
-
-//     if( dwResult == ERROR_SUCCESS )
-//     { 
-//        std::cout << " controller is connected ! " << "\n";
-//         // Controller is connected
-//     }
-//     else
-//     {
-//       std::cout << " controller is diSconnected ! " << "\n";
-//         // Controller is not connected
-//     }
-// }
-
-
-
-  }
 
 
  void PreLoad::handleMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
@@ -824,12 +775,6 @@ static std::string textFileRead(const char *fileName) {
 
     return fileString; // Return our string
 }
-
-
-
- 
-
-
 
 
  // loading .vert and .frag 

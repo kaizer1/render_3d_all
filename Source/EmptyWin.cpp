@@ -129,7 +129,6 @@ std::cout << "exists error = " << textPreError << '\n';
 
 
      }
-
 }
 
 
@@ -137,11 +136,9 @@ std::cout << "exists error = " << textPreError << '\n';
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)                        
 {         
 
-
     if (losLoad != NULL)                                                                        
     {         
 
-   
       switch(uMsg) 
       {
 
@@ -311,7 +308,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)    
 {
 
-  
 
    // UNREFERENCED_PARAMETER(hPrevInstance);
    // UNREFERENCED_PARAMETER(pCmdLine);
@@ -357,18 +353,20 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 
  HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_LOSVALIARNTALL));
    MSG msg = { };
-    while (GetMessage(&msg, NULL, 0, 0))
-    {
-           std::cout << " GetMessage ! " << " \n";
-         if(!TranslateAccelerator(msg.hwnd, hAccelTable , &msg))
-         {
+   
+    // while (GetMessage(&msg, NULL, 0, 0))
+    // {
+    //        std::cout << " GetMessage ! " << " \n";
+    //      if(!TranslateAccelerator(msg.hwnd, hAccelTable , &msg))
+    //      {
 
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-         }
+    //     TranslateMessage(&msg);
+    //     DispatchMessage(&msg);
+    //      }
 
-      losLoad->PreRender(); 
-    }
+    //   losLoad->PreRender(); 
+    // }
+
 
  
 
@@ -377,10 +375,16 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
  std::cout << " calling start console printed " << "\n";
 
 
-     for (int32_t i = 0; i < __argc; i++) {  std::cout << " wefwe " << "\n"; };
+    // for (int32_t i = 0; i < __argc; i++) {  std::cout << " wefwe " << "\n"; };
+
+  
+     while(1){
+
+             losLoad->PreRender(); 
+     }
 
 
- losLoad->callMainBuildWindow();
+ //losLoad->callMainBuildWindow();
 
 
 return 1;

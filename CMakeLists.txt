@@ -24,8 +24,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 
 # enable Vulkan, DirectX, OpenGL 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DOPENGL_VARIANT")
-
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DOPENGL_VARIANT" -ffast-math)
 
 
 project(${NAME})
