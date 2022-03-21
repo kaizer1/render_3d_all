@@ -7,6 +7,7 @@
 #include <thread>
 #include <vector>
 #include <sstream>
+#include <fstream>
 #include <functional>
 
 //#include <ASTC.h>
@@ -257,6 +258,14 @@ class PreLoad {
        const bool LoadingOpenGLPrograms(int w, int h, HDC cinte);
        const void setHWND(HWND* hwnds);
 
+ 
+
+     
+  
+
+        void WriteElements(int numbers);  
+
+
 
  private: 
 
@@ -286,6 +295,7 @@ class PreLoad {
 
   GLuint l3DViewProgram;
   LosModel main3DObjects;
+  std::ofstream myfileDump;
 
 
  GLuint matrix3dModelView, matrix3dPositionView, vLight,vCam; 

@@ -231,29 +231,33 @@ if(GetWindowRect(*hwndLos, &rect)){
 
 
     callProgramGL();
+     std::cout << " erorr new" << " \n";
+
+   //   glDebugMessageControlARB(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
+   //     std::cout << " erorr " << " \n";
+   //   glDebugMessageInsertARB( GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 100, 
+   //      GL_DEBUG_SEVERITY_NOTIFICATION, -1, "los mes debug 01 ");
+
+   // std::cout << " erorr 21" << " \n";
+   //   glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 1, -1, "los mes 02 ");
+   // std::cout << " erorr 22" << " \n";
 
 
-     glDebugMessageControlARB(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
-     glDebugMessageInsertARB( GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 100, 
-        GL_DEBUG_SEVERITY_NOTIFICATION, -1, "los mes debug 01 ");
-
-     glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 1, -1, "los mes 02 ");
-
-     glDebugMessageCallbackARB(glErrorLoskutnikov, NULL);
-
-    std::vector<GLuint>  a = {2147483647};
-    glDebugMessageControlARB(DEBUG_SOURCE_OTHER, DEBUG_TYPE_PERFORMANCE, GL_DONT_CARE,
-                             static_cast<GLuint>(a.size()), a.data(), GL_FALSE );
+   //   glDebugMessageCallbackARB(glErrorLoskutnikov, NULL);
+   // std::cout << " erorr 23" << " \n";
+   //  std::vector<GLuint>  a = {2147483647};
+   //  glDebugMessageControlARB(DEBUG_SOURCE_OTHER, DEBUG_TYPE_PERFORMANCE, GL_DONT_CARE,
+   //                           static_cast<GLuint>(a.size()), a.data(), GL_FALSE );
 
    
 
-    glDebugMessageInsertARB(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 100, 
-    GL_DEBUG_SEVERITY_NOTIFICATION, -1, "los mes 03 ");
+   //  glDebugMessageInsertARB(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 100, 
+   //  GL_DEBUG_SEVERITY_NOTIFICATION, -1, "los mes 03 ");
 
+   //   std::cout << " erorr 2" << " \n";
 
-
-    glPopDebugGroup();
-
+   //  glPopDebugGroup();
+     std::cout << " erorr 33223" << " \n";
      mainContext = cinte;
      mainWidth = (int32_t)width;
      mainHeight = (int32_t)height;
@@ -265,7 +269,7 @@ if(GetWindowRect(*hwndLos, &rect)){
     glBindVertexArray(testRec.vao);
     testRecrangleProgram = glCreateProgram();
 
-
+     std::cout << " erorr 3" << " \n";
      //GLuint vertexOne = loadGLShader(GL_VERTEX_SHADER, vertexShader); // loading shader for .h 
      //GLuint fragmeOne = loadGLShader(GL_FRAGMENT_SHADER, fragmentShader); // **** 
      GLuint vertexOne = loadGLShaderRes(GL_VERTEX_SHADER, "assets/Shaders/ver1.vert"); // loading .vert .frag  to path 
@@ -734,6 +738,18 @@ const void PreLoad::QuitToApp() const noexcept{
 
  } 
 
+
+        //std::ofstream myfileDump;
+
+  void PreLoad::WriteElements(int numbers){
+
+      myfileDump.open ("Dump.txt");
+      myfileDump << " wod " << numbers << " \n";
+      myfileDump.close();
+
+
+        }
+  
 
  bool PreLoad::InstallWindow(HINSTANCE hInstance, int nCmdShow){
 

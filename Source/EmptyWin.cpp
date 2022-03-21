@@ -20,7 +20,7 @@
 #define IDC_LOSVALIARNTALL            109
 
 // OPENGL_VARIANT  VULKAN_VARIANT  DIRECTX_VARIANT DIRECTX_ULTRA_VARIANT
-#ifdef OPENGL_VARIANT
+
 // #include <GL/GL.h>
 // #include <sstream>
 // #include <GL/glext.h>
@@ -74,8 +74,6 @@ HGLRC ourOpenGLRenderingContext;
 HDC ourWindowHandleToDeviceContext;
 HDC m_deviceContext;
 HGLRC m_renderingContext;
-
-#endif
 
 
 
@@ -312,7 +310,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
    // UNREFERENCED_PARAMETER(hPrevInstance);
    // UNREFERENCED_PARAMETER(pCmdLine);
  losLoad = new PreLoad();
-
+losLoad->WriteElements(0);
 
  const auto CLASS_NAME = (LPCWSTR)"Sample Window Class";
     
@@ -324,11 +322,13 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 
     RegisterClass(&wc);
 
+losLoad->WriteElements(11);
 
+losLoad->WriteElements(12);
   HWND hwnd = CreateWindowEx(
         0,                               // Optional window styles.
         CLASS_NAME,                      // Window class
-        (LPCWSTR) L"Loading 3d Scene !", // Window text
+        (LPCWSTR) L"Scene 3D", // Window text
         WS_OVERLAPPEDWINDOW,             // Window style
 
         // Size and position
@@ -339,33 +339,36 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
         hInstance,  // Instance handle
         NULL        // Additional application data
         );
-
+losLoad->WriteElements(3);
     if (hwnd == NULL)
     {
          std::cout << " this null hwnd " << "\n";
         return 0;
     }
 
+losLoad->WriteElements(4);
     ShowWindow(hwnd, nCmdShow);
 
+losLoad->WriteElements(2);
   losLoad->setHWND(&hwnd);
 
 
  HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_LOSVALIARNTALL));
    MSG msg = { };
    
-    // while (GetMessage(&msg, NULL, 0, 0))
-    // {
-    //        std::cout << " GetMessage ! " << " \n";
-    //      if(!TranslateAccelerator(msg.hwnd, hAccelTable , &msg))
-    //      {
+    while (GetMessage(&msg, NULL, 0, 0))
+    {
+           std::cout << " GetMessage ! " << " \n";
+         if(!TranslateAccelerator(msg.hwnd, hAccelTable , &msg))
+         {
 
-    //     TranslateMessage(&msg);
-    //     DispatchMessage(&msg);
-    //      }
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+         }
 
-    //   losLoad->PreRender(); 
-    // }
+      losLoad->PreRender(); 
+    }
+
 
 
  
