@@ -31,5 +31,5 @@ project(${NAME})
 include_directories(  include/)
 
 
-add_executable(${NAME} EmptyWin.cpp PreLoad.cpp)
+add_executable(${NAME} Source/EmptyWin.cpp Source/PreLoad.cpp)
 target_link_libraries (${NAME} ${Vulkan_LIBRARY} ${WINLIBS})
