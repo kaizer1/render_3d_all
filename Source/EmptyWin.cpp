@@ -15,12 +15,13 @@
 #pragma comment(linker, "/subsystem:windows")
 #include <fcntl.h>
 #include <io.h>
-
+#include <uxtheme.h>
+#include <thread>
 
 #define IDC_LOSVALIARNTALL            109
 
 // OPENGL_VARIANT  VULKAN_VARIANT  DIRECTX_VARIANT DIRECTX_ULTRA_VARIANT
-
+//#ifdef OPENGL_VARIANT
 // #include <GL/GL.h>
 // #include <sstream>
 // #include <GL/glext.h>
@@ -67,13 +68,15 @@ typedef const char* (WINAPI* PFNWGLGETEXTENSIONSSTRINGEXTPROC) (void);
 typedef BOOL(WINAPI* PFNWGLSWAPINTERVALEXTPROC) (int);
 typedef int (WINAPI* PFNWGLGETSWAPINTERVALEXTPROC) (void);
 
-
+bool MainRunning = false;
 
 
 HGLRC ourOpenGLRenderingContext;
 HDC ourWindowHandleToDeviceContext;
 HDC m_deviceContext;
 HGLRC m_renderingContext;
+
+//#endif
 
 
 
@@ -127,6 +130,7 @@ std::cout << "exists error = " << textPreError << '\n';
 
 
      }
+
 }
 
 
@@ -134,9 +138,11 @@ std::cout << "exists error = " << textPreError << '\n';
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)                        
 {         
 
+
     if (losLoad != NULL)                                                                        
     {         
 
+   
       switch(uMsg) 
       {
 
@@ -285,6 +291,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                       case 0x1B:
                        {
                          std::cout << " pree Escape " << "\n";
+                         MainRunning = false;
                          losLoad->QuitToApp();
                          PostQuitMessage(0);
                        }  
@@ -306,11 +313,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)    
 {
 
+  
 
    // UNREFERENCED_PARAMETER(hPrevInstance);
    // UNREFERENCED_PARAMETER(pCmdLine);
  losLoad = new PreLoad();
-losLoad->WriteElements(0);
+
+   for (int32_t i = 0; i < __argc; i++) {  std::cout << " wefwe " << "\n"; };
+
 
  const auto CLASS_NAME = (LPCWSTR)"Sample Window Class";
     
@@ -322,13 +332,11 @@ losLoad->WriteElements(0);
 
     RegisterClass(&wc);
 
-losLoad->WriteElements(11);
 
-losLoad->WriteElements(12);
   HWND hwnd = CreateWindowEx(
         0,                               // Optional window styles.
         CLASS_NAME,                      // Window class
-        (LPCWSTR) L"Scene 3D", // Window text
+        (LPCWSTR) L" ", // Window text
         WS_OVERLAPPEDWINDOW,             // Window style
 
         // Size and position
@@ -339,57 +347,70 @@ losLoad->WriteElements(12);
         hInstance,  // Instance handle
         NULL        // Additional application data
         );
-losLoad->WriteElements(3);
+
     if (hwnd == NULL)
     {
          std::cout << " this null hwnd " << "\n";
         return 0;
     }
 
-losLoad->WriteElements(4);
+
+    
+
+   // SetWindowTheme(hwnd, L"DarkMode_Explorer", NULL);
+ 
     ShowWindow(hwnd, nCmdShow);
 
-losLoad->WriteElements(2);
   losLoad->setHWND(&hwnd);
 
 
  HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_LOSVALIARNTALL));
    MSG msg = { };
-   
-    while (GetMessage(&msg, NULL, 0, 0))
-    {
-           std::cout << " GetMessage ! " << " \n";
-         if(!TranslateAccelerator(msg.hwnd, hAccelTable , &msg))
-         {
-
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-         }
-
-      losLoad->PreRender(); 
-    }
-
-
 
  
 
- //losLoad->InstallWindow(hInstance, nCmdShow);
-
- std::cout << " calling start console printed " << "\n";
-
-
-    // for (int32_t i = 0; i < __argc; i++) {  std::cout << " wefwe " << "\n"; };
+   MainRunning = true;
 
   
-     while(1){
-
-             losLoad->PreRender(); 
-     }
 
 
- //losLoad->callMainBuildWindow();
+   //std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+
+     ///std::sleep(2000);
+      while(MainRunning){
+
+       // std::cout << " our this " << "\n";
+      
+         if(PeekMessage(&msg, hwnd, 0, 0, PM_REMOVE)){
+            std::cout << " Peek Messages press " << "\n";
+         TranslateMessage(&msg);
+         DispatchMessage(&msg);
+         }else{
+            losLoad->PreRender(); 
+         }
+
+  // while (GetMessage(&msg, NULL, 0, 0))
+  //   {
+  //          std::cout << " GetMessage ! " << " \n";
+  //       //  if(!TranslateAccelerator(msg.hwnd, hAccelTable , &msg))
+  //       //  {
+
+  //       // TranslateMessage(&msg);
+  //       // DispatchMessage(&msg);
+  //       //  }
+
+  //    // losLoad->PreRender(); 
+  //   }
+
+     losLoad->PreRender();
+
+      }
+
+//         std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 
 
-return 1;
- 
+// std::cout << " end program " << "\n";
+
+
+return 1; 
 }

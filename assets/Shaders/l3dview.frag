@@ -2,7 +2,7 @@
         
 precision mediump float;
         
-in vec2 fragColor;
+in vec2 fragCol;
         
 uniform sampler2D basecolor;
    //   uniform float fAmbient;
@@ -13,6 +13,6 @@ out vec4 ColorOut;
  void main()
 {
  
- ColorOut = texture(basecolor, fragColor.uv);
+ ColorOut = texture2D(basecolor, fragCol);
             
 };

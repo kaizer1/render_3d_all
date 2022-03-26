@@ -7,7 +7,6 @@
 #include <thread>
 #include <vector>
 #include <sstream>
-#include <fstream>
 #include <functional>
 
 //#include <ASTC.h>
@@ -249,22 +248,13 @@ class PreLoad {
 
 
        void handleMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-   	 // void callMainBuildWindow() noexcept; 
-     void loadDDSTexture(const char* name, unsigned int* texutID);
+       void loadDDSTexture(const char* name, unsigned int* texutID);
        bool InstallWindow(HINSTANCE hInstance, int nCmdShow);
        const void QuitToApp() const noexcept;
        const void CallingLoadingExtension() const noexcept;
-        void PreRender();
+       void PreRender();
        const bool LoadingOpenGLPrograms(int w, int h, HDC cinte);
        const void setHWND(HWND* hwnds);
-
- 
-
-     
-  
-
-        void WriteElements(int numbers);  
-
 
 
  private: 
@@ -295,7 +285,6 @@ class PreLoad {
 
   GLuint l3DViewProgram;
   LosModel main3DObjects;
-  std::ofstream myfileDump;
 
 
  GLuint matrix3dModelView, matrix3dPositionView, vLight,vCam; 

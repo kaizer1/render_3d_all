@@ -8,13 +8,13 @@ uniform mat4 matrix3d_p;
 uniform vec3 vLight;
 uniform vec3 vCam;
         
-out vec2 fragColor;
+out vec2 fragCol;
         
 void main()
  {
             
             gl_Position = matrix3d_p * matrix3d_mv * vec4(vertex3d, 1.0);
-            fragColor = fragment3d;
+            fragCol = fragment3d;
        //     normalPout = normalPos;
         
             

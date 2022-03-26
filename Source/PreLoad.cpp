@@ -193,6 +193,11 @@ PreLoad::PreLoad() : rotateY {0.0f} {
  
   std::cout << " calling this  ! " << "\n";
 
+
+
+
+
+
 }
 
 
@@ -231,33 +236,29 @@ if(GetWindowRect(*hwndLos, &rect)){
 
 
     callProgramGL();
-     std::cout << " erorr new" << " \n";
-
-   //   glDebugMessageControlARB(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
-   //     std::cout << " erorr " << " \n";
-   //   glDebugMessageInsertARB( GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 100, 
-   //      GL_DEBUG_SEVERITY_NOTIFICATION, -1, "los mes debug 01 ");
-
-   // std::cout << " erorr 21" << " \n";
-   //   glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 1, -1, "los mes 02 ");
-   // std::cout << " erorr 22" << " \n";
 
 
-   //   glDebugMessageCallbackARB(glErrorLoskutnikov, NULL);
-   // std::cout << " erorr 23" << " \n";
-   //  std::vector<GLuint>  a = {2147483647};
-   //  glDebugMessageControlARB(DEBUG_SOURCE_OTHER, DEBUG_TYPE_PERFORMANCE, GL_DONT_CARE,
-   //                           static_cast<GLuint>(a.size()), a.data(), GL_FALSE );
+     glDebugMessageControlARB(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
+     glDebugMessageInsertARB( GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 100, 
+        GL_DEBUG_SEVERITY_NOTIFICATION, -1, "los mes debug 01 ");
+
+     glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 1, -1, "los mes 02 ");
+
+     glDebugMessageCallbackARB(glErrorLoskutnikov, NULL);
+
+    std::vector<GLuint>  a = {2147483647};
+    glDebugMessageControlARB(DEBUG_SOURCE_OTHER, DEBUG_TYPE_PERFORMANCE, GL_DONT_CARE,
+                             static_cast<GLuint>(a.size()), a.data(), GL_FALSE );
 
    
 
-   //  glDebugMessageInsertARB(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 100, 
-   //  GL_DEBUG_SEVERITY_NOTIFICATION, -1, "los mes 03 ");
+    glDebugMessageInsertARB(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 100, 
+    GL_DEBUG_SEVERITY_NOTIFICATION, -1, "los mes 03 ");
 
-   //   std::cout << " erorr 2" << " \n";
 
-   //  glPopDebugGroup();
-     std::cout << " erorr 33223" << " \n";
+
+    glPopDebugGroup();
+
      mainContext = cinte;
      mainWidth = (int32_t)width;
      mainHeight = (int32_t)height;
@@ -269,7 +270,7 @@ if(GetWindowRect(*hwndLos, &rect)){
     glBindVertexArray(testRec.vao);
     testRecrangleProgram = glCreateProgram();
 
-     std::cout << " erorr 3" << " \n";
+
      //GLuint vertexOne = loadGLShader(GL_VERTEX_SHADER, vertexShader); // loading shader for .h 
      //GLuint fragmeOne = loadGLShader(GL_FRAGMENT_SHADER, fragmentShader); // **** 
      GLuint vertexOne = loadGLShaderRes(GL_VERTEX_SHADER, "assets/Shaders/ver1.vert"); // loading .vert .frag  to path 
@@ -729,7 +730,6 @@ const void PreLoad::QuitToApp() const noexcept{
 }
 
 
-
  void PreLoad::handleMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
   
         std::cout << " in handle messages " << "\n";
@@ -738,18 +738,6 @@ const void PreLoad::QuitToApp() const noexcept{
 
  } 
 
-
-        //std::ofstream myfileDump;
-
-  void PreLoad::WriteElements(int numbers){
-
-      myfileDump.open ("Dump.txt");
-      myfileDump << " wod " << numbers << " \n";
-      myfileDump.close();
-
-
-        }
-  
 
  bool PreLoad::InstallWindow(HINSTANCE hInstance, int nCmdShow){
 
@@ -791,6 +779,12 @@ static std::string textFileRead(const char *fileName) {
 
     return fileString; // Return our string
 }
+
+
+
+ 
+
+
 
 
  // loading .vert and .frag 
@@ -1007,7 +1001,7 @@ const void PreLoad::loadMyMatrix() const noexcept {
    LosMatrix4_4 swordIdenMat = identity();  // kolobush7
    //LosBearM.ScaleLos(LosVector3(2.0f, 2.0f, 2.0f));
    //LosKolobush.rotateLosY(rotateY); // 0.314 -0.157f  // -0.122843, 0.157486  + = 0.279
-   swordIdenMat.Transposition(LosVector3(0.145f, 0.06f, 0.0f));
+   //swordIdenMat.Transposition(LosVector3(0.145f, 0.06f, 0.0f));
    //swordIdenMat.rotateLosY(rotateY);
    LosMatrix4_4 finalSwordMa = LookAt * swordIdenMat;
 
@@ -1032,7 +1026,7 @@ glBindVertexArray(0);
  
 
   const auto diff434 = std::chrono::high_resolution_clock::now() - startInRenderTwo;
-  std::cout << " " << (size_t)std::chrono::duration<double, std::milli>(diff434).count() / 1000.0f << " fps" <<" \n"; // was std::milli
+ // std::cout << " " << (size_t)std::chrono::duration<double, std::milli>(diff434).count() / 1000.0f << " fps" <<" \n"; // was std::milli
  // end's render time 
 
   }
