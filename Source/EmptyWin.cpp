@@ -103,7 +103,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 
     ShowWindow(hwnd, nCmdShow);
 
+ losLoad->InstallWindow(hInstance, nCmdShow, hwnd);
+
    MSG msg = { };
+
+
     while (GetMessage(&msg, NULL, 0, 0))
     {
         TranslateMessage(&msg);
@@ -112,7 +116,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 
  
 
- losLoad->InstallWindow(hInstance, nCmdShow);
+
 
  std::cout << " calling start console printed " << "\n";
 
