@@ -1,0 +1,13 @@
+# ninja log v5
+15	245	6700713131372014	LosMath/CMakeFiles/lMath.dir/LosVector3.cpp.obj	45d4cb54900a59ba
+11	265	6700713131312008	LosMath/CMakeFiles/lMath.dir/LosQuaternion.cpp.obj	25a464fc0d1315c0
+9	274	6700713131512019	LosMath/CMakeFiles/lMath.dir/LosMatrix4_4.cpp.obj	c39f0f6ac37b0e9e
+6	274	6700713131612034	LosMath/CMakeFiles/lMath.dir/LosMatrix3_3.cpp.obj	6067a5c64c997ead
+13	275	6700713131612034	LosMath/CMakeFiles/lMath.dir/LosVector2.cpp.obj	c3a81eaa7e63e0bc
+252	435	6700713133272027	LosMath/CMakeFiles/lMath.dir/LosVector4.cpp.obj	59169c567829938d
+266	446	6700713133392037	LosMath/CMakeFiles/lMath.dir/MatAndVectOperators.cpp.obj	5cbcd68fe61376cb
+446	563	6700713134542033	LosMath/lMath.lib	1cb95d749143287a
+5	1091	6700713139842031	CMakeFiles/render_3d.dir/Source/ASTC.cpp.obj	55615f80a2afc00c
+3	2112	6700713150042025	CMakeFiles/render_3d.dir/Source/EmptyWin.cpp.obj	f04f7a08c936d9e0
+1	2354	6700713152452004	CMakeFiles/render_3d.dir/Source/PreLoad.cpp.obj	d64d493244daf56d
+2354	2615	6700713154982016	render_3d.exe	4b247335cd40151a

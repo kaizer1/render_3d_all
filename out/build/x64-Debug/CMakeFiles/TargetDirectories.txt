@@ -1,0 +1,6 @@
+C:/Users/loskutnikov/Desktop/cpp/EmpptyWin/out/build/x64-Debug/CMakeFiles/render_3d.dir
+C:/Users/loskutnikov/Desktop/cpp/EmpptyWin/out/build/x64-Debug/CMakeFiles/edit_cache.dir
+C:/Users/loskutnikov/Desktop/cpp/EmpptyWin/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
+C:/Users/loskutnikov/Desktop/cpp/EmpptyWin/out/build/x64-Debug/LosMath/CMakeFiles/rebuild_cache.dir
+C:/Users/loskutnikov/Desktop/cpp/EmpptyWin/out/build/x64-Debug/LosMath/CMakeFiles/lMath.dir
+C:/Users/loskutnikov/Desktop/cpp/EmpptyWin/out/build/x64-Debug/LosMath/CMakeFiles/edit_cache.dir

@@ -1,6 +1,7 @@
+project(lMath)
 cmake_minimum_required(VERSION 3.18.1)
 
-project(lMath)
+
 
 file(GLOB PUBLIC_HEADERS_LMATH "include/*.hpp")
 

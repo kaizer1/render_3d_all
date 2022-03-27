@@ -1,5 +1,6 @@
 #build project
 #bach -c "cd Buildsl/"
+bash -c "mkdir Buildsl"
 bash -c "mkdir Buildsl/Debug"
 bash -c "mkdir Buildsl/Release"
 bash -c "mkdir Buildsl/Release/assets"
