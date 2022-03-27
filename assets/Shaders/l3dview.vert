@@ -13,6 +13,7 @@ out vec2 fragCol;
 void main()
  {
             
+     
             gl_Position = matrix3d_p * matrix3d_mv * vec4(vertex3d, 1.0);
             fragCol = fragment3d;
        //     normalPout = normalPos;

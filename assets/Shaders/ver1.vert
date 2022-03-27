@@ -9,6 +9,7 @@ out vec2 finalColor;
 void main ()
 {
 
+   gl_PointSize = 12.0;
    gl_Position = matrix_main * vec4(vertex_main, 1);
    finalColor = color_main;
 };

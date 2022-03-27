@@ -103,6 +103,21 @@ const char fragmentShader [] =
 
 
 
+ 
+  // ok data work Triangle  is best ! 
+//     uint16 aVertexTestRect [9]= {
+    //      FloatToHalf(0.2f), FloatToHalf(0.4f), FloatToHalf(0.0f),
+    //      FloatToHalf(0.5f), FloatToHalf(0.9f), FloatToHalf(0.0f),
+    //      FloatToHalf(1.0f), FloatToHalf(0.4f), FloatToHalf(0.0f) 
+    //  };
+
+    // float aFragmetnRect [6]= {
+    //    0.238f, 0.218f,
+    //    0.873f, 0.031f,
+    //    0.461f, 0.001f
+    // };
+
+
 
          // gl version = 
          // GL_AMD_multi_draw_indirect 

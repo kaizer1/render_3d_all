@@ -42,9 +42,98 @@
 //#include <unistd.h>
 
 typedef unsigned short uint16;
+typedef unsigned int   uint32;
+typedef   signed int    int32;
 // TODO: Controllers 
 
 //#include <xinput.h> 
+
+
+inline uint32 Float32SubnormalToNormal(uint32 i)
+{
+    uint32 mantissa = i;
+    uint32 exponent = 0;          // Zero exponent
+
+
+    // Recall that a float represents a (base 2) binary number using scientific notation, which is of the format: MANTISSA x 2^(EXPONENT-EXP_BIAS).
+    // So to represent the "normal" version of a "subnormal" float, where the exponent==0 AND mantissa!=0 indicates "subnormal" via IEEE float 754 specification,
+    // we just need to make the exponent non-zero while still having the overall float value represent the same number..
+    // We do this by subtracting
+
+    // While not normalized..
+    while(!(mantissa&0x00800000))
+    {
+        exponent -= 0x00800000;   // Decrement exponent (1<<23). This is the same as subtracting 1 from the 8bit mantissa, but in the context of a uint32 instead of a uint8.
+        mantissa <<= 1;           // Left shift mantissa 1, which is multiplying by 2..
+    }
+
+    mantissa &= ~0x00800000;        // Clear first exponent bit
+    exponent += 0x38800000;         // Adjust bias ((127-14)<<23)
+    return (mantissa | exponent);   // Return finalized float including new mantissa and exponent
+}
+
+inline float HalfToFloat( uint16 bits )
+{
+    // This accounts for normal 2byte floats, but what about the special cases..
+    uint32 ret = ((bits&0x8000)<<16) | (((bits&0x7c00)+0x1C000)<<13) | ((bits&0x03FF)<<13);
+    // When exponent is zero: we're dealing with either +/- zero (when mantissa is also zero), OR subnormal values (when mantissa is also non-zero)
+    // However zero exponents are handled by the above logic, and it also properly handles mantissas of any values.
+    // When exponent is 31: we're dealing with either +/- infinity (when mantissa is also zero), OR NaN (Not a Number) (when mantissa is also non-zero)
+    // For the case when the 5-bit exponent is 31, we're converting to an 8-bit exponent, and our logic will not expand the exponent to 255 like it needs to.
+
+    // If the 2byte float (masking off the sign/mantissa bits) is equal to the mask for the exponent bits...
+    if( (bits & 0x7c00) == 0x7c00)
+    {  // Exponent==31 special case..
+        ret|= 0x7F800000;    // Set the 8bits of the exponent for the 4 byte return value.
+    }
+    else if( 0 == (bits&0x7c00) && 0 != (bits&0x03FF)) // If 2byte float was a subnormal number...
+    {
+        // Return the normalized version of 4byte float, since operating on subnormal floating point numbers
+        // will introduce "floating point drift" (loss of precision), after arithmetic, sooner..
+        ret = Float32SubnormalToNormal(ret);
+    }
+
+    return *((float*)&ret);
+}
+
+
+
+ inline uint16 FloatToHalf( float v )
+{
+    uint32 src = *(uint32*)(&v);
+    uint32 sign = src >> 31;   // Shifts on unsigned int types are always supposed to zero fill, is this the case for Mac, and Linux, etc. as well..
+    uint16 ret;
+
+    // Extract mantissa
+    uint32 mantissa = src  &  (1 << 23) - 1;
+
+    // extract & convert exp bits
+    int32 exp = int32( src >> 23  &  0xFF ) - 127;
+    if( exp > 15 )
+    {
+        // The largest-possible positive 2-byte-float exponent value would be 11110-01111 = 11110 = 15.
+        exp = 15;
+        mantissa = (1 << 23) - 1;
+    }
+    else if( exp < -14 )
+    {
+        // handle wraparound of shifts (done mod 64 on PPC)
+        // All float32 denormal/0 values map to float16 0
+        if( exp <= - 14 - 24 )
+        {
+            mantissa = 0;
+        }
+        else
+        {
+            mantissa = ( mantissa | 1 << 23 )  >>  (-exp - 14);
+        }
+        exp = -14;
+    }
+    // TODO: exp is a *signed* int, left shifting it could extend the signed bit,
+    // will have to mask off the first bits where the mantissa should go.
+    ret = (sign << 15)  |  ((uint16)(exp + 15)  << 10) |  (mantissa >> 13);
+    return ret;
+}
 
 
 
@@ -255,6 +344,8 @@ class PreLoad {
        void PreRender();
        const bool LoadingOpenGLPrograms(int w, int h, HDC cinte);
        const void setHWND(HWND* hwnds);
+       void TriangleActive( bool activeTriangles);
+       void RotateEnable();
 
 
  private: 
@@ -272,6 +363,7 @@ class PreLoad {
   void LoadASTCImage(const char* name, losFormatASTC astcs, unsigned int* texutID);
   void callChange() noexcept;
 
+
   GLuint VAo_toSimpleProgram;
   GLuint simpleProgram;
 
@@ -285,6 +377,8 @@ class PreLoad {
 
   GLuint l3DViewProgram;
   LosModel main3DObjects;
+  bool drawTriangles = true;
+  bool rotateYes = false;
 
 
  GLuint matrix3dModelView, matrix3dPositionView, vLight,vCam; 

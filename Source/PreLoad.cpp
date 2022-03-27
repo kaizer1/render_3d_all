@@ -81,6 +81,27 @@ PFNGLISSHADERPROC glIsShader;
 
 
 
+ const unsigned  short lTriang[36] = {
+       0,1,2,2,3,0, 
+       1,2,5,5,6,1,
+       4,5,6,6,7,4,
+       3,4,5,5,2,3,
+       3,4,7,7,0,3,
+       0,1,6,6,7,0
+    };
+
+
+ const unsigned  short lLines[24] = {
+       0,3, 3,2, 2,1, 1,0,
+       2,5, 5,6,6,1,
+       4,5, 4,7, 7,6,
+       3,4, 0,7 
+    };
+
+     const unsigned  short lPoints[8] = {
+       0,1,2,3,4,5,6,7
+    };
+
 
 
 inline void checkError(int a){
@@ -298,17 +319,37 @@ if(GetWindowRect(*hwndLos, &rect)){
 
         glGetError();
 
-     float  aVertexTestRect [9]= {
-         0.2f, 0.4f, 0.0f,
-         0.5f, 0.9f, 0.0f,
-         1.0f, 0.4f, 0.0f 
+
+     const uint16 aVertexTestRect [24]= {
+
+         FloatToHalf(0.0f), FloatToHalf(0.0f), FloatToHalf(0.3f),
+         FloatToHalf(0.6f), FloatToHalf(0.0f), FloatToHalf(0.3f),
+         FloatToHalf(0.6f), FloatToHalf(0.6f), FloatToHalf(0.3f),
+         FloatToHalf(0.0f), FloatToHalf(0.6f), FloatToHalf(0.3f),
+
+
+         FloatToHalf(0.0f), FloatToHalf(0.6f), FloatToHalf(-0.3f),
+         FloatToHalf(0.6f), FloatToHalf(0.6f), FloatToHalf(-0.3f),
+         FloatToHalf(0.6f), FloatToHalf(0.0f), FloatToHalf(-0.3f),
+         FloatToHalf(0.0f), FloatToHalf(0.0f), FloatToHalf(-0.3f)
+
+
      };
 
-    float aFragmetnRect [6]= {
+    const float aFragmetnRect [16]= {
        0.238f, 0.218f,
        0.873f, 0.031f,
-       0.461f, 0.001f
+       0.461f, 0.001f,
+       0.234f, 0.134f,
+
+
+       0.238f, 0.218f,
+       0.873f, 0.031f,
+       0.461f, 0.001f,
+       0.234f, 0.134f
     };
+
+   
 
 
 
@@ -317,19 +358,21 @@ checkError(0);
         glGenBuffers(1, &bufferf1);
         glGenBuffers(1, &bufferf2);
         //glGenBuffers(1, &bufferf3);
-        //glGenBuffers(1, &buUnirr4);
+        glGenBuffers(1, &buUnirr4);
+        //glGenBuffers(1, &bufLine);
+        //glGenBuffers(1, &bufPoints);
 
 
           glBindBuffer(GL_ARRAY_BUFFER, bufferf1);
         {
-            glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), aVertexTestRect, GL_STATIC_DRAW);
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (const void*) VERTEX_OFFSET);
+            glBufferData(GL_ARRAY_BUFFER, 24 * sizeof(uint16), aVertexTestRect, GL_STATIC_DRAW);
+            glVertexAttribPointer(0, 3, GL_HALF_FLOAT, GL_FALSE, 0, (const void*) VERTEX_OFFSET);
             glEnableVertexAttribArray(0);
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, bufferf2);
         {
-            glBufferData(GL_ARRAY_BUFFER,  6 * sizeof(float), aFragmetnRect, GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER,  16 * sizeof(float), aFragmetnRect, GL_STATIC_DRAW);
             glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (const void*) VERTEX_OFFSET);
             glEnableVertexAttribArray(1);
         }
@@ -341,15 +384,18 @@ checkError(0);
         //     glEnableVertexAttribArray(2);
         // }
 
-        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buUnirr4);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buUnirr4);
 
         // BIGS ERROR !!!
         // RY glBufferData (GLenum target, GLsizeiptr size, const void *data, GLenum usage)
        // GLsizei size = losIndexesAssets * sizeof(GL_UNSIGNED_SHORT);  // was losIndexesAssets * sizeof(GL_UNSIGNED_SHORT)
         //GLushort 
 
-        //glBufferData(GL_ELEMENT_ARRAY_BUFFER, losIndexesAssets * sizeof(unsigned  short), bIndexAssets, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36 * sizeof(unsigned  short), lTriang, GL_STATIC_DRAW);
  
+
+
+
         glUseProgram(0);
         glBindVertexArray(0);
   checkError(1);
@@ -590,6 +636,8 @@ static void glErrorLoskutnikov(GLenum source, GLenum type, GLuint id, GLenum sev
      //  uint16 aStraw[sladkjflkasdjf];
      t.read(reinterpret_cast<char*>(ksdflkssdfdf), losJokVertex * sizeof(uint16));
 
+  std::cout << " my vertex 0 ==  " <<  HalfToFloat(ksdflkssdfdf[0]) << "\n";
+  std::cout << " my vertex 921 ==  " << HalfToFloat(ksdflkssdfdf[921]) << "\n";
   
  //   unsigned short bIndexAssets[losIndexesAssets];
   unsigned short* bIndexAssets = new unsigned short[losIndexesAssets];
@@ -745,6 +793,15 @@ const void PreLoad::QuitToApp() const noexcept{
    return false;
  }
 
+
+void PreLoad::RotateEnable(){
+  
+    if(rotateYes){
+        rotateYes = false;
+    }else{
+        rotateYes = true;
+    }
+}
 
 
 void PreLoad::PreRender()
@@ -955,8 +1012,6 @@ const void PreLoad::loadMyMatrix() const noexcept {
  // 2d  (UI)
 
    
-   
-
 
 
   // 3d  simple 
@@ -971,19 +1026,59 @@ const void PreLoad::loadMyMatrix() const noexcept {
 
     LosMatrix4_4 LosBamboo= identity();
     //LosBamboo.ScaleLos(LosVector3(2.0f, 2.0f, 2.0f));
-    LosBamboo.rotateLosY(rotateY);
+
+
+ LosBamboo.rotateLosY(rotateY);
+
+    
     //LosBamboo.
     LosMatrix4_4 finalTestMatrix = pers * LookAt * LosBamboo;
 
-
+ 
+    glEnable(GL_DEPTH_TEST);
     glUniformMatrix4fv(matrixTestRect, 1, GL_FALSE, &finalTestMatrix.elements[0][0]);
-    glDrawArrays(GL_TRIANGLES, 0, 3); // no needed to proc exists !!
+
+     if(drawTriangles){
+ 
+              GLuint buUnirr4;
+           glGenBuffers(1, &buUnirr4);
+          glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buUnirr4);
+
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36 * sizeof(unsigned  short), lTriang, GL_STATIC_DRAW);
+
+         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0);
+     }else {
+       
+
+
+           GLuint lines, points;
+           glGenBuffers(1, &lines);
+           glGenBuffers(1, &points);
+           glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, lines);
+
+           glBufferData(GL_ELEMENT_ARRAY_BUFFER, 24 * sizeof(unsigned  short), lLines, GL_STATIC_DRAW);
+
+           glDrawElements(GL_LINES, 24, GL_UNSIGNED_SHORT, 0);
+
+   
+          glEnable(GL_PROGRAM_POINT_SIZE); 
+          glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, points);
+
+           glBufferData(GL_ELEMENT_ARRAY_BUFFER, 8 * sizeof(unsigned  short), lPoints, GL_STATIC_DRAW);
+
+           glDrawElements(GL_POINTS, 8, GL_UNSIGNED_SHORT, 0);
+
+          glDisable(GL_PROGRAM_POINT_SIZE);
+     }
+   
+
+    //glDrawArrays(GL_TRIANGLES, 0, 3); // no needed to proc exists !!
 
    // callChange();
-    rotateY += 1.0f;
+
     //std::cout << " my rotate == " << rotateY << "\n";
  
-
+    glDisable(GL_DEPTH_TEST);
 
 
    // 3d hard 
@@ -992,9 +1087,9 @@ const void PreLoad::loadMyMatrix() const noexcept {
 
      glUseProgram(l3DViewProgram);
      glBindVertexArray(main3DObjects.vao);
-     glActiveTexture(GL_TEXTURE0);
-     glUniform1i(samplerSword, 0);
-     glBindTexture(GL_TEXTURE_2D, swordID);
+     //glActiveTexture(GL_TEXTURE0);
+     //glUniform1i(samplerSword, 0);
+     //glBindTexture(GL_TEXTURE_2D, swordID);
 
 
 
@@ -1015,12 +1110,18 @@ const void PreLoad::loadMyMatrix() const noexcept {
     glUniformMatrix4fv(matrix3dPositionView, 1, GL_FALSE, &pers.elements[0][0]); 
     glUniformMatrix4fv(matrix3dModelView, 1, GL_FALSE, &finalSwordMa.elements[0][0]); 
     glDrawElements(GL_TRIANGLES, main3DObjects.drawIndexs, GL_UNSIGNED_SHORT, 0); 
+ 
+
+   if(rotateYes){
+     rotateY += 1.0f;
+    }
+
 
 
 glUseProgram(0);
 glBindVertexArray(0);
 
-
+ 
 
   SwapBuffers(mainContext);
  
@@ -1154,6 +1255,16 @@ std::cout << " final load images " << "\n";
 
 
 
+  void PreLoad::TriangleActive( bool activeTriangles){
+   
+       if (activeTriangles){
+drawTriangles = true;
+       }else{
+drawTriangles = false;
+       }
+      
+
+    }
 
 
 void PreLoad::loadDDSTexture(const char* path, unsigned int* texutID){

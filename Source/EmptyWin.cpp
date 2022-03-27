@@ -283,18 +283,63 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 
         case WM_CHAR:
-        {
+        {  
+  
+              std::cout << " wm_char " << " " << wParam << " \n";
+
               switch (wParam)
                 {
                       case 0x08:
                         break;
+
                       case 0x1B:
                        {
                          std::cout << " pree Escape " << "\n";
                          MainRunning = false;
                          losLoad->QuitToApp();
                          PostQuitMessage(0);
-                       }  
+                       } 
+
+                       case 0x31:
+                       {
+                        std::cout << "Press 1 " << "\n";
+                         losLoad->TriangleActive(true);
+
+                       } 
+                       break;
+
+                       case 0x32:
+                       {
+                        std::cout << "Press 2 " << "\n";
+                         losLoad->TriangleActive(false);
+                       }
+                       break;
+
+
+                        case 0x52:
+                       {
+                        std::cout << "Press R " << "\n";
+                         losLoad->RotateEnable();
+                       }
+                       break;
+
+
+                        case 114:
+                       {
+                        std::cout << "Press R " << "\n";
+                         losLoad->RotateEnable();
+                       }
+                       break;
+
+                        case 0x53:
+                       {
+                        std::cout << "Press S " << "\n";
+                         losLoad->RotateEnable();
+                       }
+                       break;
+
+
+
                 }
           }
           break;
@@ -382,7 +427,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
        // std::cout << " our this " << "\n";
       
          if(PeekMessage(&msg, hwnd, 0, 0, PM_REMOVE)){
-            std::cout << " Peek Messages press " << "\n";
+           // std::cout << " Peek Messages press " << "\n";
          TranslateMessage(&msg);
          DispatchMessage(&msg);
          }else{

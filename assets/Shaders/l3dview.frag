@@ -13,6 +13,7 @@ out vec4 ColorOut;
  void main()
 {
  
- ColorOut = texture2D(basecolor, fragCol);
-            
+ //ColorOut = texture2D(basecolor, fragCol);
+   ColorOut = vec4(fragCol, 0.3, 1.0);
+
 };
