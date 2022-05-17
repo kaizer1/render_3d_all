@@ -22,6 +22,7 @@
 
 
 PreLoad* losLoad = nullptr;
+bool MainRunning = false;
 
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)                        
@@ -34,11 +35,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
          case WM_CREATE: 
            {
 
-
-
+            
            }
-
            return 0;
+
+
+        case WM_CHAR:
+         {
+
+            switch(wParam)
+            {
+                 case 0x08:
+                 break;
+
+                 case 0x1B:
+                 std::cout << " PRess escape Q ? " << "\n";
+                 MainRunning = false;
+                 losLoad->QuitToApp();
+                 PostQuitMessage(0);
+                 break;
+
+
+            }
+         }   
 
     }
 
@@ -104,6 +123,16 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
     ShowWindow(hwnd, nCmdShow);
 
    MSG msg = { };
+
+ losLoad->InstallWindow(hInstance, nCmdShow);
+ std::cout << " calling start console printed " << "\n";
+
+     for (int32_t i = 0; i < __argc; i++) {  std::cout << " wefwe " << "\n"; };
+
+
+ losLoad->callMainBuildWindow();
+
+
     while (GetMessage(&msg, NULL, 0, 0))
     {
         TranslateMessage(&msg);
@@ -112,17 +141,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 
  
 
- losLoad->InstallWindow(hInstance, nCmdShow);
-
- std::cout << " calling start console printed " << "\n";
-
-
-     for (int32_t i = 0; i < __argc; i++) {  std::cout << " wefwe " << "\n"; };
-
-
-
- losLoad->callMainBuildWindow();
- 
 
  
 
