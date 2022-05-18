@@ -13,7 +13,9 @@ using namespace std::literals;
 using Microsoft::WRL::ComPtr;
 
 
-
+#pragma comment (lib, "d3dcompiler.lib")
+#pragma comment (lib, "D3D12.lib")
+#pragma comment (lib, "dxgi.lib")
 
 
 
@@ -25,6 +27,7 @@ namespace DX
         if (FAILED(hr))
         {
             // Set a breakpoint on this line to catch DirectX API errors
+          std::cout <<  " error ! " << "\n";
             throw std::exception();
         }
     }
@@ -128,7 +131,7 @@ PreLoad::PreLoad() {
     debugController->EnableDebugLayer();
 
     ComPtr<IDXGIFactory4> mdgiFactory;
-    DX::ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(&mdgiFactory)));
+    DX::ThrowIfFailed(CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(&mdgiFactory)));
 
     HRESULT hardwareResult = D3D12CreateDevice(
        nullptr, // default device 
@@ -174,16 +177,6 @@ PreLoad::PreLoad() {
  
  
 
-  RECT rect;
-   if(GetWindowRect(*hwnd, &rect)){
-      std::cout << " my width == " << rect.right - rect.left << "\n";
-       std::cout << " my height == " << rect.bottom - rect.top << "\n";
-   }
-
-   
-     //D3D12_FEATURE_DATA_D3D12_OPTIONS5 dke;
-     //dke.SRVOnlyTiledResourceTier3 = true;
- 
 
  
 
@@ -236,12 +229,43 @@ PreLoad::PreLoad() {
 
       mCommandListGrap->Close();   
 
- 
 
-   // swapChain create 
-   ComPtr<IDXGISwapChain3> m_swapChain;
-   DXGI_SWAP_CHAIN_DESC sd;
-   //sd.BufferDesc.Width = 
+
+
+  RECT rect;
+   if(GetWindowRect(*hwnd, &rect)){
+      std::cout << " my width == " << rect.right - rect.left << "\n";
+       std::cout << " my height == " << rect.bottom - rect.top << "\n";
+   }
+
+   
+              ComPtr<IDXGISwapChain> mSwapChain;
+     const auto  width = rect.right - rect.left;
+     const auto height = rect.bottom - rect.top; 
+       
+       auto m4xMsaaState = true;
+
+       DXGI_SWAP_CHAIN_DESC df;
+       df.BufferDesc.Width = width;
+       df.BufferDesc.Height = height;
+       df.BufferDesc.RefreshRate.Numerator = 60;
+       df.BufferDesc.RefreshRate.Denominator = 1;
+       df.BufferDesc.Format = mBackBufferFormat;
+       df.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+       df.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+       df.SampleDesc.Count = 2; //m4xMsaaState ? 4 : 1;
+       df.SampleDesc.Quality = 1; //m4xMsaaState ? (m4xMsaaQaulity - 1) : 0;
+       df.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+       df.BufferCount = 2;
+       df.OutputWindow = *hwnd;
+       df.Windowed = true;
+       df.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+       df.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+
+       DX::ThrowIfFailed(mdgiFactory->CreateSwapChain(
+        mCommandQueue.Get(),
+        &df,
+        mSwapChain.GetAddressOf()));
 
 
 
