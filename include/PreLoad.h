@@ -22,7 +22,7 @@ class PreLoad {
 
        void handleMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
    	   void callMainBuildWindow() noexcept; 
-       bool InstallWindow(HINSTANCE hInstance, int nCmdShow);
+       bool InstallWindow(HINSTANCE hInstance, int nCmdShow, HWND* hwnd);
        void QuitToApp();
 
 

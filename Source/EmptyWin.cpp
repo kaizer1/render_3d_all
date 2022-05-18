@@ -124,7 +124,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 
    MSG msg = { };
 
- losLoad->InstallWindow(hInstance, nCmdShow);
+ losLoad->InstallWindow(hInstance, nCmdShow, &hwnd);
  std::cout << " calling start console printed " << "\n";
 
      for (int32_t i = 0; i < __argc; i++) {  std::cout << " wefwe " << "\n"; };
