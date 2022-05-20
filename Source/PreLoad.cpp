@@ -25,9 +25,32 @@ namespace DX
     inline void ThrowIfFailed(HRESULT hr)
     {
         if (FAILED(hr))
-        {
+        { 
+
+            switch(hr) {
+                case E_ABORT:{
+               std::cout << " E_ABORT " << "\n";
+                }
+                break;
+
+                case E_FAIL:{
+  std::cout << " E_ABORT 1" << "\n";
+                }
+                break;
+
+                case E_HANDLE:{
+  std::cout << " E_ABORT 2" << "\n";
+                }
+                break;
+
+                default:{
+  std::cout << " default " << "\n";
+                }
+            }
+
             // Set a breakpoint on this line to catch DirectX API errors
-          std::cout <<  " error ! " << "\n";
+          std::cout <<  " error ! " <<   HRESULT_CODE(hr) <<"\n";
+        //  std::cout << " SCode code " << SCODE_CODE()
             throw std::exception();
         }
     }
@@ -244,6 +267,7 @@ PreLoad::PreLoad() {
      const auto height = rect.bottom - rect.top; 
        
        auto m4xMsaaState = true;
+       mSwapChain.Reset();
 
        DXGI_SWAP_CHAIN_DESC df;
        df.BufferDesc.Width = width;
@@ -253,7 +277,7 @@ PreLoad::PreLoad() {
        df.BufferDesc.Format = mBackBufferFormat;
        df.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
        df.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-       df.SampleDesc.Count = 2; //m4xMsaaState ? 4 : 1;
+       df.SampleDesc.Count = 1; //m4xMsaaState ? 4 : 1;
        df.SampleDesc.Quality = 1; //m4xMsaaState ? (m4xMsaaQaulity - 1) : 0;
        df.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
        df.BufferCount = 2;
@@ -262,11 +286,14 @@ PreLoad::PreLoad() {
        df.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
        df.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
+         std::cout << " this pre error !  " << "\n";
        DX::ThrowIfFailed(mdgiFactory->CreateSwapChain(
         mCommandQueue.Get(),
         &df,
         mSwapChain.GetAddressOf()));
 
+ 
+      
 
 
 
