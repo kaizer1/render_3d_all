@@ -17,7 +17,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 
 
-	find_library(Vulkan_LIBRARY NAMES vulkan-1 vulkan PATHS "C:/VulkanSDK/1.3.204.0/Lib" )
+	find_library(Vulkan_LIBRARY NAMES vulkan-1 vulkan PATHS "C:/VulkanSDK/1.3.211.0/Lib" )
 		IF (Vulkan_LIBRARY)
 			set(Vulkan_FOUND ON)
 			MESSAGE("Using bundled Vulkan library version")
