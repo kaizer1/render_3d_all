@@ -588,8 +588,38 @@ void PreLoad::PreDestroy(){
    PFN_vkGetPhysicalDeviceMemoryProperties losGetPhysicalMemmoryDeviceProperties = reinterpret_cast<PFN_vkGetPhysicalDeviceMemoryProperties>(tempDeviceMemoryProperties);
    losGetPhysicalMemmoryDeviceProperties(myPhysicalDevice, &myPhysicalDeviceMemoryPropertises2);
 
+
+
    std::cout << " my memory properties (type count) : " << myPhysicalDeviceMemoryPropertises2.memoryTypeCount << "\n";
    std::cout << " my memory properties (memoryHeapCount) : " << myPhysicalDeviceMemoryPropertises2.memoryHeapCount << "\n";
+    for( int i =0; i < myPhysicalDeviceMemoryPropertises2.memoryHeapCount; i++){
+      
+      //std::cout << " my memory flags " << 
+   
+          if(myPhysicalDeviceMemoryPropertises2.memoryHeaps[i].flags == 0x00000001){
+            std::cout << " my type memory head ==  VK_MEMORY_HEAP_DEVICE_LOCAL_BIT " << "\n";
+          }else if (myPhysicalDeviceMemoryPropertises2.memoryHeaps[i].flags == 0x00000002){
+            std::cout << " my type memory head == VK_MEMORY_HEAP_MULTI_INSTANCE_BIT "  << "\n";
+          }
+
+std::cout << " my memory properties flags type ()" << " " << myPhysicalDeviceMemoryPropertises2.memoryHeaps[i].flags << "\n";
+      std::cout << " my memory properties ()" << " " << myPhysicalDeviceMemoryPropertises2.memoryHeaps[i].size << "\n";
+    }
+
+
+
+// y memory properties (memoryHeapCount) : 3
+//  my type memory head ==  VK_MEMORY_HEAP_DEVICE_LOCAL_BIT
+//  my memory properties flags type () 1
+//  my memory properties () 8421113856
+//  my memory properties flags type () 0
+//  my memory properties () 17132777472
+//  my type memory head ==  VK_MEMORY_HEAP_DEVICE_LOCAL_BIT
+//  my memory properties flags type () 1
+//  my memory properties () 224395264
+
+
+    
  // memoryHeapCount
     
 
