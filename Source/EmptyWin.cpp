@@ -40,6 +40,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
            return 0;
 
+
+         case WM_CHAR:
+         {
+            switch(wParam)
+            {
+               
+                case 0x48: // press H 
+                std::cout << " print -HELP " << "\n";
+                break;
+
+                case 0x08: // Backspace
+                break;
+
+                case 0x1B:
+                std::cout << " Press escape Q !" << "\n";
+                // stop running loop 
+                losLoad->PreDestroy();
+                PostQuitMessage(0);
+                break;
+            }
+         }  
+
     }
 
 
@@ -49,7 +71,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     }    
 
 
- 
 
     return (DefWindowProc(hWnd, uMsg, wParam, lParam));                                             
 }       
@@ -134,5 +155,4 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 
 return 1;
 
- 
-  }
+}

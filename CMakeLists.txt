@@ -16,6 +16,12 @@ set(NAME render_3d)
 set(CMAKE_CXX_STANDARD 20)
 
 
+if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 19.12.25835)
+    MESSAGE (WARNING " set ok Version  ")
+    set(CMAKE_CXX20_STANDARD_COMPILE_OPTION "-std:c++20") # ok -std:c++20  -std:c++latest
+    set(CMAKE_CXX20_EXTENSION_COMPILE_OPTION "-std:c++20") # ---
+  endif()
+
 
 	find_library(Vulkan_LIBRARY NAMES vulkan-1 vulkan PATHS "C:/VulkanSDK/1.3.211.0/Lib" )
 		IF (Vulkan_LIBRARY)
