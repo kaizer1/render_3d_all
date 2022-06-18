@@ -17,8 +17,15 @@ using Microsoft::WRL::ComPtr;
 #pragma comment (lib, "D3D12.lib")
 #pragma comment (lib, "dxgi.lib")
 
+//#if defined(DEBUG) || defined(_DEBUG)
+#include <dxgidebug.h> // IDXGIInfoQueue
+//#endif
 
 
+#define _FACDXGI    0x87a
+//#define MAKE_DXGI_HRESULT(code) MAKE_HRESULT(1, _FACDXGI, code)
+
+//#define DXGI_ERROR_INVALID_CALL                 MAKE_DXGI_HRESULT(1)
 
 namespace DX
 {
@@ -48,8 +55,8 @@ namespace DX
                 }
             }
 
-            // Set a breakpoint on this line to catch DirectX API errors
-          std::cout <<  " error ! " <<   HRESULT_CODE(hr) <<"\n";
+     
+          std::cout <<  " error ! " <<   HRESULT_CODE(hr) << " " << hr <<"\n";
         //  std::cout << " SCode code " << SCODE_CODE()
             throw std::exception();
         }
@@ -143,6 +150,12 @@ PreLoad::PreLoad() {
 
 
 
+static void DebugReportCallback(D3D12_MESSAGE_CATEGORY Category, D3D12_MESSAGE_SEVERITY Severity, D3D12_MESSAGE_ID ID, LPCSTR pDescription, void* pContext)
+{
+   std::cout << " this my debug callback ! " << "\n";
+}
+
+
  bool PreLoad::InstallWindow(HINSTANCE hInstance, int nCmdShow, HWND* hwnd){
 
     
@@ -150,11 +163,46 @@ PreLoad::PreLoad() {
     ComPtr<ID3D12Debug> debugController;
     ComPtr<ID3D12Device5> m3LosDevice; // was ID3D12Device 
     ComPtr<ID3D12Fence> mLosFence;
+
+
+
+    std::cout << " pre my main error ! " << "\n";
     DX::ThrowIfFailed(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)));
     debugController->EnableDebugLayer();
 
+// was IDXGIInfoQueue1
+ComPtr<ID3D12InfoQueue1> dxgiInfoQueue;
+ 
+DX::ThrowIfFailed(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&dxgiInfoQueue)));
+ std::cout<< " post debug " << "\n";
+
+ if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&dxgiInfoQueue)))) {
+       //auto dxgiFactoryFlags = DXGI_CREATE_FACTORY_DEBUG;
+        // DX12 does not support redirect debug layer message currently, see:
+        // https://devblogs.microsoft.com/directx/d3d12-debug-layer-message-callback/
+        // Sample code is:
+        // ComPtr<IDXGIInfoQueue1> dxgiInfoQueue;
+        // dxgiInfoQueue->RegisterMessageCallback(..);
+
+DWORD callBackCookie = 0;
+dxgiInfoQueue->RegisterMessageCallback(DebugReportCallback, D3D12_MESSAGE_CALLBACK_IGNORE_FILTERS, nullptr, &callBackCookie);
+  std::cout << " my register  callback is ! " << "\n";
+// dxgiInfoQueue->UnregisterMessageCallback(callBackCookie);
+
+    }else{
+      std::cout << " are this no ! " << "\n";
+    }
+
+
+
+
+
+
     ComPtr<IDXGIFactory4> mdgiFactory;
     DX::ThrowIfFailed(CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(&mdgiFactory)));
+
+
+
 
     HRESULT hardwareResult = D3D12CreateDevice(
        nullptr, // default device 
@@ -166,6 +214,8 @@ PreLoad::PreLoad() {
       }else{
         std::cout << " ok loading first device's " << "\n";
       }
+
+
 
 
 
@@ -224,6 +274,11 @@ PreLoad::PreLoad() {
 
 
 
+
+
+
+
+
      // command Queue & command List 
     ComPtr<ID3D12CommandQueue> mCommandQueue;
     ComPtr<ID3D12CommandAllocator> mDirectCmdListAllocator;
@@ -255,6 +310,9 @@ PreLoad::PreLoad() {
 
 
 
+
+
+
   RECT rect;
    if(GetWindowRect(*hwnd, &rect)){
       std::cout << " my width == " << rect.right - rect.left << "\n";
@@ -278,12 +336,12 @@ PreLoad::PreLoad() {
        df.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
        df.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
        df.SampleDesc.Count = 1; //m4xMsaaState ? 4 : 1;
-       df.SampleDesc.Quality = 1; //m4xMsaaState ? (m4xMsaaQaulity - 1) : 0;
+       df.SampleDesc.Quality = 0; //m4xMsaaState ? (m4xMsaaQaulity - 1) : 0;
        df.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
        df.BufferCount = 2;
        df.OutputWindow = *hwnd;
        df.Windowed = true;
-       df.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+       df.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
        df.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
          std::cout << " this pre error !  " << "\n";
