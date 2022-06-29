@@ -8,7 +8,7 @@
 #include <string>
 //#include <EasyVulkanMain.hpp>
 
-
+#include <iostream>
 
 
 struct VkDll {
@@ -17,7 +17,11 @@ struct VkDll {
         library = dlopen("libvulkan.so", RTLD_NOW | RTLD_LOCAL);
         if (!library) library = dlopen("libvulkan.so.1", RTLD_NOW | RTLD_LOCAL);
 #elif defined(_WIN32)
-        library = LoadLibrary(TEXT("vulkan-1.dll"));
+         std::cout << " pre load " << " \n";
+        library = LoadLibrary(TEXT("vulkan-1.dll")); // was .dll
+           std::cout << " post load " << " \n";
+        if( !library)
+           std::cout << " not loaded library !!! " << " \n";
 #endif
 #if !defined(__APPLE__)
         if (library == 0) return VK_ERROR_INITIALIZATION_FAILED;

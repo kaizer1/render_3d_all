@@ -16,6 +16,17 @@ set(NAME render_3d)
 set(CMAKE_CXX_STANDARD 20)
 
 
+#if (MSVC)
+    # warning level 4 and all warnings as errors
+    add_compile_options(/Zc:__cplusplus)
+    add_compile_options(/std:latest)
+    MESSAGE (WARNING " in MSVC  ")
+
+
+#else()
+
+#endif()
+
 if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 19.12.25835)
     MESSAGE (WARNING " set ok Version  ")
     set(CMAKE_CXX20_STANDARD_COMPILE_OPTION "-std:c++20") # ok -std:c++20  -std:c++latest

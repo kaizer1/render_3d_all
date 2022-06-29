@@ -608,6 +608,9 @@ std::cout << " my memory properties flags type ()" << " " << myPhysicalDeviceMem
 
 
 
+
+
+
 // y memory properties (memoryHeapCount) : 3
 //  my type memory head ==  VK_MEMORY_HEAP_DEVICE_LOCAL_BIT
 //  my memory properties flags type () 1
@@ -621,9 +624,59 @@ std::cout << " my memory properties flags type ()" << " " << myPhysicalDeviceMem
 
     
  // memoryHeapCount
-    
 
 
+
+   PFN_vkVoidFunction tempEnumerateDevicesExtenProper = losDLL->fp_vkGetInstanceProcAddr(losInstance, "vkEnumerateDeviceExtensionProperties");
+   if(!tempEnumerateDevicesExtenProper) throw " Failed to load vkEnumerateDeviceExtensionProperties";
+
+   PFN_vkEnumerateDeviceExtensionProperties losGetPhysicalMemmoryDevExtensionEnum = reinterpret_cast<PFN_vkEnumerateDeviceExtensionProperties>(tempEnumerateDevicesExtenProper);
+   //losGetPhysicalMemmoryDevExtensionEnum(myPhysicalDevice, &myPhysicalDeviceMemoryPropertises2);
+
+   uint32_t deviceExten = 0;
+   VkExtensionProperties *deviceExtenPo = nullptr;
+   res = losGetPhysicalMemmoryDevExtensionEnum(myPhysicalDevice, nullptr, &deviceExten, nullptr);
+   std::cout << " my nubmer exten ==  " << deviceExten << " \n";
+
+
+   VkBool32 swapchainExtFound = 0;
+   VkExtensionProperties* deveExten1 = new VkExtensionProperties[deviceExten];
+   res = losGetPhysicalMemmoryDevExtensionEnum(myPhysicalDevice, nullptr, &deviceExten,deveExten1);
+   
+      // const char *extensionNames[16] = {0};
+       for (uint32_t i = 0; i < deviceExten; i++)
+       {
+        std::cout  << " my extension this == " <<  deveExten1[i].extensionName << " \n";
+       }
+
+
+       // SwapChain ! main values
+ 
+
+  // HINSTANCE hInstance, int nCmdShow, HWND hWnd
+      VkWin32SurfaceCreateInfoKHR surface_los = {
+           VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,
+           nullptr,
+           0,
+           hInstance,
+           hWnd
+      };
+
+
+      res = vkCreateWin32SurfaceKHR(losInstance, &surface_los, nullptr, &mySurfaceLos);
+      std::cout << " call pre vulkan load " << " \n";
+      cb(res);
+
+
+       // or create Devices and Queue index
+
+
+
+
+     
+
+ delete [] deveExten1;
+ // destroySurface 
  losFDestroyDebugCallbackExt(losInstance, cb1, nullptr);
  losDLL->fp_vkDestroyInstance(losInstance, NULL);
 

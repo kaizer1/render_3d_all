@@ -32,4 +32,5 @@ class PreLoad {
    // was // VkDll losDLL;
    std::unique_ptr<VkDll> losDLL; 
    VkDebugReportCallbackEXT cb1;
+   VkSurfaceKHR  mySurfaceLos;
   };  
